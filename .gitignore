@@ -1,0 +1,11 @@
+# local secrets - never commit
+.streamlit/secrets.toml
+data/yt_cache.json
+data/yt_quota.json
+# personal state: starts fresh on a new machine / deployment
+data/progress.json
+data/profile.json
+data/focus.json
+.venv/
+__pycache__/
+*.pyc

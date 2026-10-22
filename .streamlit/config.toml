@@ -1,0 +1,26 @@
+[theme]
+base = "dark"
+primaryColor = "#F5B942"
+backgroundColor = "#070B16"
+secondaryBackgroundColor = "#111A2E"
+textColor = "#E8ECF4"
+borderColor = "#22304D"
+linkColor = "#FFD982"
+font = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+headingFont = "'Playfair Display':https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&display=swap"
+codeFont = "'JetBrains Mono':https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
+baseRadius = "12px"
+showWidgetBorder = true
+chartCategoricalColors = ["#F5B942", "#2DD4BF", "#60A5FA", "#A78BFA", "#F472B6", "#FB923C", "#34D399"]
+
+[theme.sidebar]
+backgroundColor = "#050812"
+secondaryBackgroundColor = "#111A2E"
+
+[server]
+headless = true
+port = 8501
+runOnSave = true
+
+[browser]
+gatherUsageStats = false

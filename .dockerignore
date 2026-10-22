@@ -1,0 +1,15 @@
+.venv
+__pycache__
+*.pyc
+*.pyo
+.git
+.gitignore
+.streamlit/secrets.toml
+data/yt_cache.json
+data/yt_quota.json
+data/progress.json
+data/profile.json
+data/focus.json
+scripts/_tmp*
+README.md
+DEPLOY.md

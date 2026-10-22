@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: project-devi
+    runtime: docker
+    plan: free             # sleeps after 15 idle minutes; no persistent disk (see DEPLOY.md)
+    region: ohio
+    numInstances: 1        # JSON storage is single-writer; never scale past one
+    healthCheckPath: /_stcore/health
+    autoDeploy: false       # on free tier a deploy wipes progress: export first, then deploy
+    envVars:
+      - key: DEVI_PASSWORD
+        sync: false         # set in the Render dashboard; never commit it
+      - key: YOUTUBE_API_KEY
+        sync: false

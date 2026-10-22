@@ -1,0 +1,128 @@
+"""Quiz & exam question bank for Project DEVI."""
+QUESTIONS = [
+# ---------- FINANCE BASICS ----------
+{"id":"f1_1","track":"finance","module":"F1","diff":"easy","q":"What is the time value of money?","opts":["Money is worth more today than the same amount in the future due to potential earning capacity","Money loses value over time due to inflation only","Future money is always worth more than present money","Interest rates do not affect money's value"],"ans":0,"exp":"A dollar today can be invested to earn returns, so it's worth more than a dollar later."},
+{"id":"f1_2","track":"finance","module":"F1","diff":"easy","q":"Which asset class historically has the highest long-term returns?","opts":["Bonds","Cash","Stocks (equities)","Real estate"],"ans":2,"exp":"Equities have historically outperformed other asset classes over long horizons (with higher volatility)."},
+{"id":"f1_3","track":"finance","module":"F1","diff":"easy","q":"What does market capitalization represent?","opts":["Total debt of a company","Share price x shares outstanding","Annual revenue","Total assets"],"ans":1,"exp":"Market cap = current share price * total shares outstanding."},
+{"id":"f1_4","track":"finance","module":"F1","diff":"medium","q":"In a bull market, prices are generally:","opts":["Falling","Rising","Flat","Volatile only"],"ans":1,"exp":"A bull market is characterized by rising prices and optimism."},
+{"id":"f1_5","track":"finance","module":"F1","diff":"medium","q":"Diversification primarily reduces:","opts":["Systematic (market) risk","Unsystematic (idiosyncratic) risk","Inflation risk","Interest rate risk"],"ans":1,"exp":"Diversification eliminates firm-specific risk but not market-wide risk."},
+# ---------- ACCOUNTING ----------
+{"id":"f2_1","track":"finance","module":"F2","diff":"easy","q":"The accounting equation is:","opts":["Assets = Liabilities + Equity","Assets = Liabilities - Equity","Revenue - Expenses = Assets","Assets + Liabilities = Equity"],"ans":0,"exp":"Assets = Liabilities + Shareholders' Equity."},
+{"id":"f2_2","track":"finance","module":"F2","diff":"easy","q":"Gross margin is calculated as:","opts":["(Revenue - COGS)/Revenue","Revenue/COGS","Net income/Revenue","COGS/Revenue"],"ans":0,"exp":"Gross margin = (Revenue - Cost of Goods Sold) / Revenue."},
+{"id":"f2_3","track":"finance","module":"F2","diff":"medium","q":"Which statement shows cash generated from operations?","opts":["Income statement","Balance sheet","Cash flow statement","Statement of equity"],"ans":2,"exp":"The cash flow statement details operating, investing, and financing cash flows."},
+{"id":"f2_4","track":"finance","module":"F2","diff":"medium","q":"ROE (Return on Equity) measures:","opts":["Profit relative to total assets","Profit relative to shareholders' equity","Revenue relative to equity","Cash flow relative to equity"],"ans":1,"exp":"ROE = Net Income / Shareholders' Equity."},
+{"id":"f2_5","track":"finance","module":"F2","diff":"hard","q":"A company with high net income but negative operating cash flow is a red flag because:","opts":["It pays too much tax","Earnings may not be backed by cash (accruals)","It has too much debt","Revenue is growing too fast"],"ans":1,"exp":"Large accruals can indicate earnings manipulation or poor cash collection."},
+# ---------- CORPORATE FINANCE / VALUATION ----------
+{"id":"f3_1","track":"finance","module":"F3","diff":"medium","q":"NPV (Net Present Value) is positive when:","opts":["IRR < cost of capital","IRR > cost of capital","Payback period is infinite","Cash flows are negative"],"ans":1,"exp":"Accept projects with NPV > 0, equivalently IRR > hurdle rate."},
+{"id":"f3_2","track":"finance","module":"F3","diff":"medium","q":"WACC stands for:","opts":["Weighted Average Cost of Capital","Working Average Cash Conversion","Worldwide Asset Cost Center","Weighted Asset Cost Calculation"],"ans":0,"exp":"WACC = weighted average of cost of equity and after-tax cost of debt."},
+{"id":"f3_3","track":"finance","module":"F3","diff":"hard","q":"In a DCF, terminal value is often computed using:","opts":["Sum of all future cash flows to infinity","Gordon growth model or exit multiple"," Liquidation value"," Book value"],"ans":1,"exp":"Terminal value = final FCF*(1+g)/(r-g) (Gordon) or exit multiple * EBITDA."},
+{"id":"f3_4","track":"finance","module":"F3","diff":"medium","q":"Enterprise Value (EV) equals:","opts":["Market cap only","Market cap + debt - cash","Market cap - debt + cash","Revenue x multiple"],"ans":1,"exp":"EV = Market Cap + Total Debt - Cash (and equivalents)."},
+{"id":"f3_5","track":"finance","module":"F3","diff":"hard","q":"An acquisition is accretive to EPS when:","opts":["Target's P/E > acquirer's P/E","Target's P/E < acquirer's P/E (stock deal)","Cash paid exceeds target value","Synergies are zero"],"ans":1,"exp":"Stock deal is accretive when target's P/E is below acquirer's P/E."},
+# ---------- PORTFOLIO ----------
+{"id":"f4_1","track":"finance","module":"F4","diff":"medium","q":"The Sharpe ratio measures:","opts":["Return per unit of total risk (std dev)","Return per unit of downside risk","Alpha relative to beta","Dividend yield"],"ans":0,"exp":"Sharpe = (Rp - Rf)/sigma_p."},
+{"id":"f4_2","track":"finance","module":"F4","diff":"medium","q":"CAPM says expected return =","opts":["Rf + beta*(Rm - Rf)","Rf + alpha*(Rm - Rf)","Rm + beta*(Rf - Rm)","beta * Rm"],"ans":0,"exp":"CAPM: E[R] = Rf + beta*(Rm - Rf)."},
+{"id":"f4_3","track":"finance","module":"F4","diff":"hard","q":"Beta of 1.5 means the stock is:","opts":["Less volatile than market","50% more volatile than market","Uncorrelated with market","Risk-free"],"ans":1,"exp":"Beta 1.5 => 50% more systematic volatility than market."},
+{"id":"f4_4","track":"finance","module":"F4","diff":"easy","q":"Index funds are popular because:","opts":["They beat the market always"," Low cost and broad diversification"," They have no risk"," They pay high dividends"],"ans":1,"exp":"Index funds offer low fees and diversification."},
+{"id":"f4_5","track":"finance","module":"F4","diff":"medium","q":"Behavioral bias: investors feeling losses more than equivalent gains is:","opts":["Overconfidence"," Loss aversion"," Anchoring"," Herding"],"ans":1,"exp":"Loss aversion: losses hurt ~2x more than gains feel good (prospect theory)."},
+# ---------- QUANT / DERIVATIVES ----------
+{"id":"q1_1","track":"quant","module":"F6","diff":"medium","q":"A call option gives the holder the right to:","opts":["Sell at strike"," Buy at strike"," Receive dividends"," Short the stock"],"ans":1,"exp":"Call = right to buy at strike price."},
+{"id":"q1_2","track":"quant","module":"F6","diff":"medium","q":"Delta of a call option is approximately:","opts":["Probability of expiring ITM"," Time decay per day"," Sensitivity to volatility"," Interest rate sensitivity"],"ans":0,"exp":"Delta ~ risk-neutral probability of finishing in the money."},
+{"id":"q1_3","track":"quant","module":"F6","diff":"hard","q":"Theta (time decay) is typically:","opts":["Positive for long options"," Negative for long options"," Zero at expiry"," Equal to vega"],"ans":1,"exp":"Long options lose value as time passes (negative theta)."},
+{"id":"q1_4","track":"quant","module":"F5","diff":"hard","q":"Geometric Brownian Motion is used to model:","opts":["Interest rates"," Stock prices"," Volatility"," Inflation"],"ans":1,"exp":"GBM is the standard model for stock price dynamics."},
+{"id":"q1_5","track":"quant","module":"F5","diff":"hard","q":"Value at Risk (VaR) at 95% means:","opts":["Max loss with 95% probability"," Loss exceeded only 5% of the time"," Expected loss"," Worst case loss"],"ans":1,"exp":"95% VaR: losses exceed this level only 5% of the time."},
+{"id":"q1_6","track":"quant","module":"F6","diff":"medium","q":"Put-call parity: C - P =","opts":["S - K*e^{-rT}","K*e^{-rT} - S","S + K*e^{-rT}","S*K"],"ans":0,"exp":"C - P = S - K e^{-rT}."},
+# ---------- MACRO ----------
+{"id":"m1_1","track":"finance","module":"F7","diff":"easy","q":"The Federal Reserve's dual mandate is:","opts":["Max employment and stable prices"," Low taxes and high growth"," Strong dollar and trade surplus"," Balanced budget"],"ans":0,"exp":"Fed mandate: maximum employment and price stability."},
+{"id":"m1_2","track":"finance","module":"F7","diff":"medium","q":"An inverted yield curve often signals:","opts":["Economic expansion"," Recession risk"," High inflation"," Strong dollar"],"ans":1,"exp":"Inverted yield curve is a classic recession indicator."},
+{"id":"m1_3","track":"finance","module":"F7","diff":"medium","q":"Quantitative easing means:","opts":["Raising interest rates"," Central bank buying assets to inject liquidity"," Selling government bonds"," Increasing reserve requirements"],"ans":1,"exp":"QE: central bank purchases assets to expand money supply."},
+# ---------- FINTECH / MICROSTRUCTURE ----------
+{"id":"f8_1","track":"finance","module":"F8","diff":"easy","q":"NBBO stands for:","opts":["National Best Bid and Offer","Net Bond Buyback Order","New Broker Book Order","National Bank Borrowing Obligation"],"ans":0,"exp":"The NBBO is the best displayed bid and best displayed offer across US exchanges."},
+{"id":"f8_2","track":"finance","module":"F8","diff":"medium","q":"A dark pool is:","opts":["A venue where orders are not displayed publicly before execution","An illegal trading venue","A pool of defaulted loans","A crypto mixing service"],"ans":0,"exp":"Dark pools are private venues with no pre-trade transparency, often used for large block orders."},
+{"id":"f8_3","track":"finance","module":"F8","diff":"medium","q":"A market order guarantees:","opts":["Execution, but not the price","The price, but not execution","Both price and execution","Neither"],"ans":0,"exp":"Market orders execute immediately at the best available price; limit orders guarantee price but may not fill."},
+{"id":"f8_4","track":"finance","module":"F8","diff":"hard","q":"In a limit order book with price-time priority, two bids at the same price are filled:","opts":["In the order they arrived","Largest size first","Randomly","Smallest size first"],"ans":0,"exp":"At the same price level, the earlier order has priority."},
+# ---------- ADVANCED AI ----------
+{"id":"a8_1","track":"ai","module":"A8","diff":"medium","q":"Diffusion models generate images by:","opts":["Learning to reverse a gradual noising process","Retrieving similar images from a database","A single forward pass of a classifier","Clustering pixels"],"ans":0,"exp":"They learn to denoise step by step, starting from pure noise."},
+{"id":"a8_2","track":"ai","module":"A8","diff":"medium","q":"In Q-learning, Q(s, a) represents:","opts":["Expected discounted return of taking action a in state s, then acting optimally","The probability of action a","The immediate reward only","The number of visits to state s"],"ans":0,"exp":"Q-values estimate long-run value of state-action pairs."},
+{"id":"a8_3","track":"ai","module":"A8","diff":"easy","q":"YOLO is primarily used for:","opts":["Real-time object detection","Text generation","Reinforcement learning","Time series forecasting"],"ans":0,"exp":"YOLO ('You Only Look Once') is a fast single-stage object detector."},
+{"id":"a8_4","track":"ai","module":"A8","diff":"hard","q":"PPO (Proximal Policy Optimization) stabilizes training by:","opts":["Clipping the policy update ratio","Using no neural network","Ignoring rewards","Freezing the value function"],"ans":0,"exp":"PPO's clipped objective prevents overly large policy updates."},
+# ---------- PROJECTS / PORTFOLIO ----------
+{"id":"c2_1","track":"career","module":"C2","diff":"medium","q":"The strongest evidence that a predictive model works is:","opts":["Out-of-sample performance versus a simple baseline","High training accuracy","A complex architecture","Many features"],"ans":0,"exp":"Generalization against a baseline is what matters."},
+{"id":"c2_2","track":"career","module":"C2","diff":"medium","q":"Look-ahead bias means:","opts":["Using information that wasn't available at prediction time","Predicting too far into the future","Using too little history","Rebalancing too often"],"ans":0,"exp":"It silently inflates backtest results."},
+{"id":"c2_3","track":"career","module":"C2","diff":"easy","q":"Why deploy a portfolio project instead of only sharing a notebook?","opts":["It proves end-to-end skill and reviewers can try it","Notebooks are not allowed","Deployment improves accuracy","It hides the code"],"ans":0,"exp":"A live demo shows engineering, not just analysis."},
+# ---------- PYTHON ----------
+{"id":"p1_1","track":"ai","module":"A1","diff":"easy","q":"What is a list comprehension in Python?","opts":["A way to create lists concisely"," A database query"," A loop that can't be nested"," A type of function"],"ans":0,"exp":"[x*2 for x in range(5)] creates lists concisely."},
+{"id":"p1_2","track":"ai","module":"A1","diff":"easy","q":"Which data structure is immutable?","opts":["list"," dict"," tuple"," set"],"ans":2,"exp":"Tuples are immutable sequences."},
+{"id":"p1_3","track":"ai","module":"A1","diff":"medium","q":"NumPy broadcasting allows:","opts":["Operations on arrays of different shapes"," Automatic type conversion"," Multi-threading"," GPU acceleration"],"ans":0,"exp":"Broadcasting stretches smaller arrays to match larger ones."},
+{"id":"p1_4","track":"ai","module":"A1","diff":"medium","q":"pandas groupby is used to:","opts":["Sort rows"," Split-apply-combine aggregation"," Merge tables"," Pivot columns"],"ans":1,"exp":"groupby splits data, applies a function, and combines results."},
+{"id":"p1_5","track":"ai","module":"A1","diff":"medium","q":"In pandas, .loc is:","opts":["Label-based indexing"," Integer-based indexing"," Boolean filtering only"," Random sampling"],"ans":0,"exp":".loc uses labels; .iloc uses integer positions."},
+# ---------- MATH / STATS ----------
+{"id":"s1_1","track":"ai","module":"A2","diff":"easy","q":"The derivative of x^2 is:","opts":["x"," 2x"," x^2"," 2"],"ans":1,"exp":"d/dx x^2 = 2x."},
+{"id":"s1_2","track":"ai","module":"A2","diff":"medium","q":"Bayes' theorem relates:","opts":["P(A|B) to P(B|A)"," Mean to variance"," Sample to population"," Correlation to causation"],"ans":0,"exp":"P(A|B) = P(B|A)P(A)/P(B)."},
+{"id":"s1_3","track":"ai","module":"A2","diff":"medium","q":"Eigenvalues of a matrix represent:","opts":["Scaling factors along eigenvectors"," Determinants"," Inverses"," Traces"],"ans":0,"exp":"Av = lambda v: eigenvalue scales the eigenvector."},
+{"id":"s1_4","track":"ai","module":"A2","diff":"medium","q":"Standard deviation is the square root of:","opts":["Variance"," Mean"," Median"," Range"],"ans":0,"exp":"std = sqrt(variance)."},
+{"id":"s1_5","track":"ai","module":"A2","diff":"hard","q":"Gradient descent updates parameters using:","opts":["Random steps"," Negative gradient of loss"," Second derivative"," Random restarts"],"ans":1,"exp":"theta = theta - lr * gradient(L)."},
+# ---------- ML FUNDAMENTALS ----------
+{"id":"ml1_1","track":"ai","module":"A3","diff":"easy","q":"Supervised learning uses:","opts":["Unlabeled data"," Labeled input-output pairs"," Rewards only"," No data"],"ans":1,"exp":"Supervised learning learns from labeled examples."},
+{"id":"ml1_2","track":"ai","module":"A3","diff":"easy","q":"Overfitting means:","opts":["Model too simple"," Model memorizes training data, poor generalization"," Too little data always"," High bias"],"ans":1,"exp":"Overfitting: low train error, high test error."},
+{"id":"ml1_3","track":"ai","module":"A3","diff":"medium","q":"Which metric is best for imbalanced classification?","opts":["Accuracy"," F1 score / PR-AUC"," MSE"," R-squared"],"ans":1,"exp":"F1 and PR-AUC handle class imbalance better than accuracy."},
+{"id":"ml1_4","track":"ai","module":"A3","diff":"medium","q":"Random Forest reduces variance by:","opts":["Boosting weak learners"," Bagging (bootstrap aggregating)"," Stacking"," Pruning only"],"ans":1,"exp":"Random forests use bagging + feature randomness."},
+{"id":"ml1_5","track":"ai","module":"A3","diff":"medium","q":"L2 regularization (Ridge) penalizes:","opts":["Absolute weights"," Squared weights"," Number of features"," Learning rate"],"ans":1,"exp":"Ridge adds lambda * sum(w^2) to loss."},
+{"id":"ml1_6","track":"ai","module":"A3","diff":"hard","q":"XGBoost is a:","opts":["Linear model"," Gradient boosting tree ensemble"," Neural network"," Clustering algorithm"],"ans":1,"exp":"XGBoost = extreme gradient boosting (trees)."},
+{"id":"ml1_7","track":"ai","module":"A3","diff":"medium","q":"K-means clustering requires specifying:","opts":["Learning rate"," Number of clusters K"," Regularization strength"," Depth of trees"],"ans":1,"exp":"K-means needs K (number of clusters)."},
+{"id":"ml1_8","track":"ai","module":"A3","diff":"hard","q":"PCA is used for:","opts":["Classification"," Dimensionality reduction"," Clustering labels"," Feature scaling"],"ans":1,"exp":"PCA reduces dimensions while preserving variance."},
+# ---------- DEEP LEARNING ----------
+{"id":"dl1_1","track":"ai","module":"A4","diff":"easy","q":"An activation function introduces:","opts":["Linearity"," Non-linearity"," Regularization"," Normalization"],"ans":1,"exp":"Activations like ReLU add non-linearity."},
+{"id":"dl1_2","track":"ai","module":"A4","diff":"medium","q":"Backpropagation computes:","opts":["Forward pass outputs"," Gradients of loss w.r.t. parameters"," Learning rate"," Batch size"],"ans":1,"exp":"Backprop uses chain rule to compute gradients."},
+{"id":"dl1_3","track":"ai","module":"A4","diff":"medium","q":"Dropout is a regularization technique that:","opts":["Adds noise to inputs"," Randomly zeros activations during training"," Increases learning rate"," Normalizes batches"]," ans":1,"exp":"Dropout randomly deactivates neurons to prevent co-adaptation."} if False else {"id":"dl1_3","track":"ai","module":"A4","diff":"medium","q":"Dropout is a regularization technique that:","opts":["Adds noise to inputs","Randomly zeros activations during training","Increases learning rate","Normalizes batches"],"ans":1,"exp":"Dropout randomly deactivates neurons to prevent co-adaptation."},
+{"id":"dl1_4","track":"ai","module":"A4","diff":"medium","q":"CNNs are especially good for:","opts":["Tabular data"," Image/spatial data"," Time series only"," Text generation"],"ans":1,"exp":"Convolutional networks exploit spatial structure (images)."},
+{"id":"dl1_5","track":"ai","module":"A4","diff":"hard","q":"The attention mechanism allows models to:","opts":["Ignore all tokens"," Focus on relevant parts of input"," Reduce parameters"," Speed up training always"],"ans":1,"exp":"Attention weights relevant tokens dynamically."},
+{"id":"dl1_6","track":"ai","module":"A4","diff":"hard","q":"Adam optimizer combines:","opts":["SGD + momentum only"," RMSProp + momentum (adaptive LR)"," Batch norm"," Dropout"],"ans":1,"exp":"Adam = adaptive learning rates with momentum."},
+# ---------- NLP / LLM ----------
+{"id":"nlp1_1","track":"ai","module":"A5","diff":"easy","q":"Tokenization splits text into:","opts":["Sentences only"," Tokens (words/subwords)"," Characters only"," Paragraphs"],"ans":1,"exp":"Tokenization converts text to token IDs."},
+{"id":"nlp1_2","track":"ai","module":"A5","diff":"medium","q":"RAG stands for:","opts":["Random Access Generation"," Retrieval-Augmented Generation"," Recurrent Attention Graph"," Robust AI Gateway"],"ans":1,"exp":"RAG = Retrieval-Augmented Generation."},
+{"id":"nlp1_3","track":"ai","module":"A5","diff":"medium","q":"LoRA fine-tunes LLMs by:","opts":["Updating all parameters"," Adding low-rank adapter matrices"," Freezing nothing"," Re-training tokenizer"],"ans":1,"exp":"LoRA trains small low-rank matrices, keeping base frozen."},
+{"id":"nlp1_4","track":"ai","module":"A5","diff":"hard","q":"A vector database is used to:","opts":["Store SQL tables"," Store and search embeddings"," Train models"," Host APIs"],"ans":1,"exp":"Vector DBs enable semantic similarity search over embeddings."},
+{"id":"nlp1_5","track":"ai","module":"A5","diff":"medium","q":"Prompt engineering technique: giving examples in the prompt is:","opts":["Zero-shot"," Few-shot"," Chain-of-thought"," Fine-tuning"],"ans":1,"exp":"Few-shot prompting provides examples."},
+# ---------- SQL ----------
+{"id":"sql1_1","track":"ai","module":"A7","diff":"easy","q":"SQL JOIN combines rows from two tables based on:","opts":["Column names only"," A related column (key)"," Row order"," Random match"],"ans":1,"exp":"JOIN matches rows on a related key column."},
+{"id":"sql1_2","track":"ai","module":"A7","diff":"medium","q":"Window function ROW_NUMBER() OVER (PARTITION BY x ORDER BY y) does:","opts":["Aggregates rows"," Assigns rank within each partition"," Filters rows"," Joins tables"],"ans":1,"exp":"ROW_NUMBER assigns sequential rank within partitions."},
+{"id":"sql1_3","track":"ai","module":"A7","diff":"medium","q":"GROUP BY is used with:","opts":["Aggregate functions"," ORDER BY only"," JOINs only"," Subqueries only"],"ans":0,"exp":"GROUP BY groups rows for aggregates like SUM/COUNT."},
+{"id":"sql1_4","track":"ai","module":"A7","diff":"hard","q":"A CTE (WITH clause) is useful for:","opts":["Indexing"," Readable multi-step queries"," Transactions"," Permissions"],"ans":1,"exp":"CTEs improve readability of complex queries."},
+# ---------- MLOPS ----------
+{"id":"mlops1_1","track":"ai","module":"A6","diff":"easy","q":"Docker containers provide:","opts":["Virtual machines"," Isolated lightweight environments"," Databases"," Networks only"],"ans":1,"exp":"Containers package app + dependencies portably."},
+{"id":"mlops1_2","track":"ai","module":"A6","diff":"medium","q":"MLflow is used for:","opts":["Data labeling"," Experiment tracking & model registry"," Web hosting"," GPU management"],"ans":1,"exp":"MLflow tracks experiments, models, and deployments."},
+{"id":"mlops1_3","track":"ai","module":"A6","diff":"medium","q":"Data drift refers to:","opts":["Model weights changing"," Input data distribution changing over time"," Code bugs"," Hardware failure"],"ans":1,"exp":"Drift = production data differs from training data."},
+# ---------- CAREER ----------
+{"id":"c1_1","track":"career","module":"C1","diff":"easy","q":"STAR method stands for:","opts":["Situation, Task, Action, Result"," Strategy, Tactics, Analysis, Review"," Start, Test, Analyze, Report"," Skill, Talent, Aptitude, Readiness"],"ans":0,"exp":"STAR = Situation, Task, Action, Result for behavioral answers."},
+{"id":"c1_2","track":"career","module":"C1","diff":"medium","q":"For a LeetCode two-sum problem, optimal time complexity is:","opts":["O(n^2)"," O(n log n)"," O(n)"," O(1)"],"ans":2,"exp":"Hash map gives O(n)."},
+{"id":"c1_3","track":"career","module":"C1","diff":"medium","q":"Big-O of binary search is:","opts":["O(n)"," O(log n)"," O(n^2)"," O(1)"],"ans":1,"exp":"Binary search halves the search space each step."},
+{"id":"c1_4","track":"career","module":"C1","diff":"easy","q":"When negotiating salary, you should:","opts":["Accept first offer immediately"," Research market rates and counter"," Never negotiate"," Focus only on base salary"],"ans":1,"exp":"Always research and negotiate; consider total comp."},
+{"id":"c1_5","track":"career","module":"C1","diff":"medium","q":"A strong GitHub portfolio should include:","opts":["Only forked repos"," Original projects with READMEs and demos"," Private repos only"," Auto-generated code"],"ans":1,"exp":"Original, documented, deployed projects stand out."},
+]
+
+# Exams group question ids
+EXAM_QUESTION_IDS = {
+    "E1": ["f1_1","f1_2","f1_3","f1_4","f1_5","f2_1","f2_2","f2_3","f2_4","f2_5","p1_1","p1_2","p1_3","s1_1","s1_2","ml1_1","ml1_2","m1_1","m1_2"],
+    "E2": ["f3_1","f3_2","f3_3","f3_4","f4_1","f4_2","f4_3","f4_4","q1_1","q1_2","q1_5","ml1_3","ml1_4","ml1_5","ml1_6","dl1_1","dl1_2","s1_3","s1_4"],
+    "E3": ["f5_1" if False else "q1_3","q1_4","q1_6","f6_1" if False else "f3_5","f8_1" if False else "m1_3","a_placeholder" if False else "ml1_7","ml1_8","dl1_3","dl1_4","dl1_5","dl1_6","nlp1_1","nlp1_2","nlp1_3","nlp1_4","nlp1_5","sql1_1","sql1_2"],
+    "E4": ["c1_1","c1_2","c1_3","c1_4","c1_5","p1_4","p1_5","sql1_3","sql1_4","mlops1_1","mlops1_2","mlops1_3"],
+    "E5": ["f1_1","f3_1","f4_1","q1_1","q1_4","ml1_1","ml1_6","dl1_5","nlp1_2","nlp1_4","sql1_2","mlops1_2","c1_2","c1_3","c1_5"],
+}
+
+# Normalize option whitespace
+for _q in QUESTIONS:
+    _q["opts"] = [o.strip() for o in _q["opts"]]
+Q_BY_ID = {q["id"]: q for q in QUESTIONS}
+
+
+def questions_for_module(mid):
+    return [q for q in QUESTIONS if q["module"] == mid]
+
+
+def questions_for_track(track):
+    return [q for q in QUESTIONS if q["track"] == track]
+
+
+def exam_questions(eid):
+    ids = EXAM_QUESTION_IDS.get(eid, [])
+    return [Q_BY_ID[i] for i in ids if i in Q_BY_ID]

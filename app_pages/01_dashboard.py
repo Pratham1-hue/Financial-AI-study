@@ -27,6 +27,26 @@ hero(
     quote_tags=["nyc"],
 )
 
+# ---------- first run: the only three things to do ----------
+if not (progress.get("xp") or progress.get("contract") or progress.get("watched")
+        or progress.get("activity")):
+    with st.container(border=True):
+        st.markdown("**Start here · Day 1 of 112**")
+        st.caption("Three moves, in order. The rest of this page is context — this is the work.")
+        _s1, _s2, _s3 = st.columns(3)
+        with _s1:
+            st.markdown("**1 · Today's mission**")
+            st.caption("The exact assignment for today. Read it before anything else.")
+            st.page_link("app_pages/15_mission.py", label="Open the mission", icon=":material/flag:")
+        with _s2:
+            st.markdown("**2 · Lock in 25 minutes**")
+            st.caption("Start the timer, then open the lesson. One block is enough to begin.")
+            st.page_link("app_pages/12_lock_in.py", label="Start the timer", icon=":material/bolt:")
+        with _s3:
+            st.markdown("**3 · Sign the contract**")
+            st.caption("The rules you are holding yourself to. Two minutes, once.")
+            st.page_link("app_pages/14_contract.py", label="Read and sign", icon=":material/gavel:")
+
 # ---------- headline numbers ----------
 countdown_label, countdown_value = "Plan day", "Day 1 / 112"
 try:

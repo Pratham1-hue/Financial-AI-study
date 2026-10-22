@@ -20,31 +20,35 @@ DEVI_CSS = """
     radial-gradient(900px 480px at -10% 8%, rgba(59,130,246,0.12), transparent 60%),
     #070B16;
 }
-.block-container { padding-top: 1.4rem; padding-bottom: 3rem; max-width: 1280px; }
+/* Streamlit's fixed header sits on top of the ticker (60px, z-index 999990).
+   This is a personal app, so the custom ticker replaces the chrome. */
+header[data-testid="stHeader"] { display: none !important; }
+[data-testid="stMainBlockContainer"] { padding-top: 0.8rem !important; }
+.block-container { padding-top: 0.8rem; padding-bottom: 3rem; max-width: 1280px; }
 
 /* ---------- hero ---------- */
 .nyc-hero {
   position: relative; overflow: hidden; border-radius: 22px;
   border: 1px solid var(--border);
   background: linear-gradient(180deg, #081029 0%, #0F1B3F 40%, #2A1E46 72%, #4A2A45 100%);
-  padding: 26px 32px 0 32px; margin-bottom: 20px;
+  padding: 22px 32px 0 32px; margin-bottom: 16px;
   box-shadow: 0 24px 70px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05);
 }
-.nyc-hero.big { padding-top: 38px; }
+.nyc-hero.big { padding-top: 26px; }
 .nyc-eyebrow { letter-spacing: .28em; font-size: .7rem; color: var(--gold);
   text-transform: uppercase; font-weight: 600; font-family: Inter, sans-serif; }
-.nyc-hero h1 { font-family: 'Playfair Display', serif; color: #FFFFFF; font-size: 2.35rem;
-  line-height: 1.15; margin: .35rem 0 .3rem 0; padding: 0; font-weight: 700; }
-.nyc-hero.big h1 { font-size: 3rem; }
+.nyc-hero h1 { font-family: 'Playfair Display', serif; color: #FFFFFF; font-size: 2.2rem;
+  line-height: 1.12; margin: .3rem 0 .25rem 0; padding: 0; font-weight: 700; }
+.nyc-hero.big h1 { font-size: 2.5rem; }
 .nyc-hero h1 em { color: var(--gold-2); font-style: italic; }
-.nyc-hero p.sub { color: #CBD5E1; margin: 0; font-size: 1.02rem; max-width: 760px; }
-.nyc-quote { margin-top: 16px; max-width: 760px; font-family: 'Playfair Display', serif;
-  font-style: italic; color: #F8E7C0; font-size: 1.08rem; line-height: 1.5;
+.nyc-hero p.sub { color: #CBD5E1; margin: 0; font-size: .98rem; max-width: 760px; }
+.nyc-quote { margin-top: 11px; max-width: 760px; font-family: 'Playfair Display', serif;
+  font-style: italic; color: #F8E7C0; font-size: 1rem; line-height: 1.45;
   border-left: 3px solid var(--gold); padding-left: 14px; }
 .nyc-quote .by { display: block; font-family: Inter, sans-serif; font-style: normal;
-  font-size: .76rem; color: var(--gold); margin-top: 4px; letter-spacing: .08em; text-transform: uppercase; }
-.skyline { margin: 14px -32px 0 -32px; line-height: 0; height: 150px; overflow: hidden; }
-.nyc-hero.big .skyline { height: 210px; }
+  font-size: .72rem; color: var(--gold); margin-top: 3px; letter-spacing: .08em; text-transform: uppercase; }
+.skyline { margin: 10px -32px 0 -32px; line-height: 0; height: 112px; overflow: hidden; }
+.nyc-hero.big .skyline { height: 118px; }
 .skyline svg { width: 100%; height: 100%; display: block; }
 .blink { animation: devi-blink 1.8s infinite; }
 .twinkle { animation: devi-twinkle 3.2s infinite ease-in-out; }

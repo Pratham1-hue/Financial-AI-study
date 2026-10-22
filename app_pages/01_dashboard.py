@@ -8,7 +8,7 @@ from lib import focus, gates
 from lib.content import MODULES
 from lib.nyc import NYC_COMP, rank_for
 from lib.quotes import quote_of_the_day
-from lib.storage import load_profile, load_progress, streak_days
+from lib.storage import load_profile, load_progress, save_progress, streak_days
 from lib.study_plan import PHASES, WEEKS
 from lib.ui import glass_card, hero, inject_css, progress_bar, quote_card, section, xp_level
 
@@ -27,25 +27,87 @@ hero(
     quote_tags=["nyc"],
 )
 
-# ---------- first run: the only three things to do ----------
-if not (progress.get("xp") or progress.get("contract") or progress.get("watched")
-        or progress.get("activity")):
+# ---------- first run: one guided path, one obvious first move ----------
+_lesson_done = bool(progress.get("onboarding_lesson")) or bool(progress.get("watched"))
+_quiz_done = bool(progress.get("quiz_scores"))
+if not (_lesson_done and _quiz_done and bool(progress.get("focus_log"))):
+    _focus_done = bool(progress.get("focus_log")) or focus.today_minutes(progress) > 0
+    _contract_done = bool(progress.get("contract"))
+    _, _, _assignment = acc.todays_assignment(progress)
+    _done_n = sum([_focus_done, _lesson_done, _quiz_done])
+    _next = next((i for i, ok in enumerate([_focus_done, _lesson_done, _quiz_done]) if not ok), 3)
+    _fs = focus.load_state()
+    _busy = _fs["status"] in ("running", "paused")
+
     with st.container(border=True):
-        st.markdown("**Start here · Day 1 of 112**")
-        st.caption("Three moves, in order. The rest of this page is context — this is the work.")
-        _s1, _s2, _s3 = st.columns(3)
-        with _s1:
-            st.markdown("**1 · Today's mission**")
-            st.caption("The exact assignment for today. Read it before anything else.")
-            st.page_link("app_pages/15_mission.py", label="Open the mission", icon=":material/flag:")
-        with _s2:
-            st.markdown("**2 · Lock in 25 minutes**")
-            st.caption("Start the timer, then open the lesson. One block is enough to begin.")
-            st.page_link("app_pages/12_lock_in.py", label="Start the timer", icon=":material/bolt:")
-        with _s3:
-            st.markdown("**3 · Sign the contract**")
-            st.caption("The rules you are holding yourself to. Two minutes, once.")
+        st.markdown(f"#### Start here — your first session · {_done_n}/3")
+        st.caption("One path. Every other page can wait. About 60–90 minutes, start to finish.")
+        st.info(f"**Today's assignment** · {_assignment}", icon=":material/flag:")
+
+        _a, _b = st.columns([5, 2])
+        with _a:
+            st.markdown(f"{'✅' if _focus_done else '**1 ·**'} **Lock in 25 minutes**")
+            st.caption("One Pomodoro. Phone in another room, one tab, full send. The timer keeps running "
+                       "while you study.")
+        with _b:
+            if _busy:
+                if st.button("Resume the session", type="primary", icon=":material/play_arrow:",
+                             width="stretch", key="ob_resume"):
+                    st.switch_page("app_pages/12_lock_in.py")
+            elif not _focus_done:
+                if st.button("Start the block", type="primary", icon=":material/bolt:",
+                             width="stretch", key="ob_start"):
+                    _s = focus.load_state()
+                    _s.update(mode="Pomodoro", subject="Python & SQL", label="A1 · Python basics")
+                    focus.start(_s)
+                    st.switch_page("app_pages/12_lock_in.py")
+            else:
+                st.markdown(":material/check_circle: **Done**")
+
+        _a, _b = st.columns([5, 2])
+        with _a:
+            st.markdown(f"{'✅' if _lesson_done else '**2 ·**'} **Learn — Python basics**")
+            st.caption("Kaggle's interactive Python course, Lesson 1: ~30 min, runs in your browser. "
+                       "Do it inside the 25-minute block from step 1.")
+        with _b:
+            if not _lesson_done:
+                st.link_button("Open Kaggle Python", "https://www.kaggle.com/learn/python",
+                               icon=":material/open_in_new:", width="stretch")
+                if st.button("Mark Lesson 1 done", width="stretch", key="ob_lesson"):
+                    progress["onboarding_lesson"] = True
+                    save_progress(progress)
+                    st.rerun()
+            else:
+                st.markdown(":material/check_circle: **Done**")
+
+        _a, _b = st.columns([5, 2])
+        with _a:
+            st.markdown(f"{'✅' if _quiz_done else '**3 ·**'} **Prove it — 5 quick questions**")
+            st.caption("Instant feedback on Python basics. 80% is mastery. This is how the app knows it stuck.")
+        with _b:
+            if not _quiz_done:
+                if st.button("Start the quiz", type="primary" if _next == 2 else "secondary",
+                             icon=":material/quiz:", width="stretch", key="ob_quiz"):
+                    st.session_state["quiz_preset"] = {"module": "A1", "track": "ai", "n": 5}
+                    st.switch_page("app_pages/07_quizzes.py")
+            else:
+                st.markdown(":material/check_circle: **Done**")
+
+        _a, _b = st.columns([5, 2])
+        with _a:
+            st.markdown(f"{'✅' if _contract_done else '**4 ·**'} **Sign the contract** *(optional today)*")
+            st.caption("The rules you are holding yourself to. Two minutes, once, and the plan becomes binding.")
+        with _b:
             st.page_link("app_pages/14_contract.py", label="Read and sign", icon=":material/gavel:")
+
+        st.caption("Prefer to study inside the app? Open the module instead, and the app tracks every video you watch.")
+        if st.button("Open A1 — Python for Data & ML in Learn", icon=":material/school:",
+                     width="stretch", key="ob_learn"):
+            st.session_state["learn_module"] = "A1"
+            st.switch_page("app_pages/04_learn.py")
+
+        st.caption("When this is done, **Today's mission** is your daily plan and the five-block loop below "
+                   "is your daily map.")
 
 # ---------- headline numbers ----------
 countdown_label, countdown_value = "Plan day", "Day 1 / 112"

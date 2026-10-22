@@ -9,14 +9,20 @@ hero("Quizzes", "Khan Academy style: instant feedback, mastery tracking.")
 
 progress = load_progress()
 
+# Onboarding hand-off: a preset lets "Start the quiz" launch a module quiz directly.
+_pre = st.session_state.pop("quiz_preset", None)
+_TRACKS = ["all", "finance", "ai", "quant", "career"]
+_d_track = _TRACKS.index(_pre["track"]) if _pre and _pre.get("track") in _TRACKS else 0
+
 # Setup
 with st.container(border=True):
     c1, c2, c3, c4 = st.columns(4)
     with c1:
-        track = st.selectbox("Track", options=["all", "finance", "ai", "quant", "career"], index=0)
+        track = st.selectbox("Track", options=_TRACKS, index=_d_track)
     with c2:
         mods = ["All"] + [m["id"] for m in MODULES if (track == "all" or m["track"] == track)]
-        mod = st.selectbox("Module", options=mods, index=0)
+        _d_mod = mods.index(_pre["module"]) if _pre and _pre.get("module") in mods else 0
+        mod = st.selectbox("Module", options=mods, index=_d_mod)
     with c3:
         diff = st.selectbox("Difficulty", options=["All", "easy", "medium", "hard"], index=0)
     with c4:
@@ -31,6 +37,18 @@ with st.container(border=True):
         pool = [q for q in pool if q["diff"] == diff]
 
     st.caption(f"Pool size: {len(pool)}")
+
+    if _pre and pool and not st.session_state.get("quiz_qs"):
+        import random
+        random.seed()
+        chosen = list(pool)
+        random.shuffle(chosen)
+        chosen = chosen[: min(int(_pre.get("n", 5)), len(chosen))]
+        st.session_state["quiz_qs"] = [q["id"] for q in chosen]
+        st.session_state["quiz_answers"] = {}
+        st.session_state["quiz_submitted"] = False
+        st.session_state["quiz_score"] = None
+        st.rerun()
 
     if st.button("Start / Reset Quiz", type="primary"):
         import random

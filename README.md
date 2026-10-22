@@ -2,6 +2,17 @@
 
 A personal, strict 16-week learning platform to master **Financial Knowledge + AI/ML** and land the greatest job in New York City.
 
+## Where to start
+
+Open the app and use the **Start here — your first session** card at the top of the Command center. One path, in order:
+
+1. **Lock in 25 minutes.** One button starts the Pomodoro and takes you to the timer. The block runs while you study.
+2. **Learn — Python basics.** Kaggle's interactive Python course, Lesson 1 (~30 min). Do it inside the block from step 1.
+3. **Prove it.** A 5-question quiz on the same material. 80% is mastery.
+4. *Optional:* sign the contract to make the plan binding.
+
+Ignore every other page today. After the first session, **Today's mission** is your daily plan and the five-block loop (Learn -> Drill -> Build -> Prove -> Debrief) is your daily map.
+
 Built with Streamlit. Includes:
 - Dashboard with XP, levels, streaks
 - 16-week structured study plan (phase-gated)

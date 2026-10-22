@@ -9,10 +9,14 @@ hero("Learn", "Module-by-module structured learning. A module is complete only w
 
 progress = load_progress()
 
-track = st.segmented_control("Track", options=["finance", "ai", "quant", "career"], default="finance") or "finance"
+_pre = st.session_state.pop("learn_module", None)
+_default_track = MODULE_BY_ID[_pre]["track"] if _pre in MODULE_BY_ID else "finance"
+track = st.segmented_control("Track", options=["finance", "ai", "quant", "career"], default=_default_track) or _default_track
 mods = modules_for_track(track)
 
-mod_choice = st.selectbox("Module", options=[f"{m['id']} - {m['title']}" for m in mods])
+_mod_opts = [f"{m['id']} - {m['title']}" for m in mods]
+_mod_idx = next((i for i, m in enumerate(mods) if m["id"] == _pre), 0)
+mod_choice = st.selectbox("Module", options=_mod_opts, index=_mod_idx)
 mid = mod_choice.split(" - ")[0]
 m = MODULE_BY_ID[mid]
 

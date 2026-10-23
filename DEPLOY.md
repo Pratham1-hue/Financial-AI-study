@@ -80,7 +80,7 @@ Without this, the app sleeps and the sleep wipes progress. Pick one:
 
 - **UptimeRobot (recommended):** free monitor, HTTP(s), 5-minute interval, URL
   `https://<app>.onrender.com/_stcore/health`.
-- **GitHub Actions:** the included workflow. Settings -> Secrets and variables -> Actions -> **Variables** -> new variable `DEVI_URL = https://<app>.onrender.com`. It pings every 10 minutes.
+- **GitHub Actions:** the included workflow. Settings -> Secrets and variables -> Actions -> **Variables** -> new variable `DEVI_URL = https://<app>.onrender.com`. It pings every 10 minutes. Until you set `DEVI_URL`, the scheduled job **skips** instead of failing, so a red X in the Actions tab means the app itself is not answering - not a missing variable.
   Caveats: GitHub can delay scheduled runs under load, and disables schedules after 60 days of repo inactivity. UptimeRobot is more reliable for this.
 - **Any external cron:** `curl https://<app>.onrender.com/_stcore/health` every 10 minutes.
 

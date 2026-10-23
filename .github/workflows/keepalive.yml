@@ -19,7 +19,10 @@ permissions: {}
 
 jobs:
   ping:
-    runs-on: ubuntu-latest
+    # Until the Render app exists, vars.DEVI_URL is empty. Skip cleanly instead of
+    # failing every 10 minutes; the job starts running the moment you set the variable.
+    if: ${{ vars.DEVI_URL != '' }}
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - name: Ping /_stcore/health
@@ -27,11 +30,9 @@ jobs:
           DEVI_URL: ${{ vars.DEVI_URL }}
         run: |
           set -euo pipefail
-          if [ -z "${DEVI_URL:-}" ]; then
-            echo "DEVI_URL repository variable is not set." >&2
-            exit 1
-          fi
           target="${DEVI_URL%/}/_stcore/health"
-          code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 30 --retry 2 "$target")
-          echo "$target -> $code"
+          # A sleeping Render instance cold-starts on the first request, so allow time.
+          code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 90 --retry 2 --retry-delay 5 \
+                   "$target" || true)
+          echo "$target -> ${code:-000}"
           test "$code" = "200"

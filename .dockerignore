@@ -8,6 +8,8 @@ __pycache__
 data/progress.json
 data/profile.json
 data/focus.json
+data/yt_cache.json
+data/yt_quota.json
 scripts/_tmp*
 README.md
 DEPLOY.md

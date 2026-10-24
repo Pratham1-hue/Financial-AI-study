@@ -7,8 +7,9 @@ name: keep-alive
 #   Name:  DEVI_URL
 #   Value: https://your-app.onrender.com
 #
-# The health endpoint is served by Streamlit itself, so it needs no password and does
-# not start a session or touch your progress file.
+# The health endpoint is served by FastAPI (`/_stcore/health` is kept as an alias for
+# this workflow), so it needs no password, starts no session and never touches your
+# progress file.
 
 on:
   schedule:

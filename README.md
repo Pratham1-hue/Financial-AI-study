@@ -13,18 +13,31 @@ Open the app and use the **Start here — your first session** card at the top o
 
 Ignore every other page today. After the first session, **Today's mission** is your daily plan and the five-block loop (Learn -> Drill -> Build -> Prove -> Debrief) is your daily map.
 
-Built with Streamlit. Includes:
-- Dashboard with XP, levels, streaks
+## Two front ends, one engine
+
+The primary UI is a **React 19 + TypeScript + Tailwind v4** SPA in `web/`, served in production by the same FastAPI process that owns the data. The original Streamlit app (`streamlit_app.py`, `app_pages/`) is kept in the repo as a fallback and still runs locally, but it is no longer in the Docker image.
+
+```powershell
+# API: imports lib/ unchanged, owns auth + the clock + grading
+.venv\Scripts\python.exe -m uvicorn api.main:app --reload --port 8000
+# SPA: hot reload on :5173, proxies /api to :8000
+cd web; npm run dev
+```
+
+Core pages: **Dashboard** (day score, the five-block loop, $DEVI, phase progress), **Learn** (18 modules, video queue with watch tracking, curated reading), **Focus** (locked-in-hours Pomodoro whose clock runs server-side), **Quizzes** (practice sets, Leitner daily drill, mastery gates with written teach-back), **The Desk** (live 3-minute market), **Labs** (SQL, credit ML, DCF).
+
+Everything the Streamlit version did is behind these pages and the API:
+
+- Dashboard with XP, levels, streaks, mastery index, career stock
 - 16-week structured study plan (phase-gated)
 - Curated resource library (90+ resources: YouTube, open source, books, courses, tools)
 - Research library (440 resources across finance, quant, AI, career and research: papers, repos, datasets, benchmarks, tools, blogs)
 - Module-by-module learning (18 modules across Finance, Quant, AI, Career)
-- Practice console (run Python in-browser with numpy/pandas/sklearn)
 - Practice materials & problem sets
-- Quizzes (Khan Academy style) with instant feedback
-- Phase-gate exams
+- Quizzes (Khan Academy style) with instant feedback, graded server-side
+- Phase-gate exams with honest, self-assessed teach-back rubrics
 - Progress analytics & weak-area tracking
-- Profile & data export/import
+- Light theme by default with a dark NYC-night toggle
 
 ### Become the best (the job is the side effect)
 - **Today's mission** - auto-assigned plan task for the day, live 0-100 day score, non-negotiables, Feynman debrief (200+ chars or it's rejected)
@@ -37,7 +50,7 @@ Built with Streamlit. Includes:
 - **The contract** - signed oath with stakes; hard mode locks the app after a zero day until you file an incident report (turning it off requires typing "I choose to be average")
 - **Daily drill** - Leitner spaced repetition with Khan-style mastery levels per module
 - **Interview gauntlet** - timed mock interviews (behavioral, finance, quant, ML, coding/SQL, markets, ML system design) with model key points and self-scoring
-- Dark NYC-night theme, procedural skyline, 55+ famous quotes throughout
+- Light "daylight Manhattan" theme by default, a one-click dark NYC-night toggle, procedural skyline, 55+ famous quotes throughout
 
 ### Bootcamp teaching patterns (researched, rebuilt)
 - **Bootcamp playbook** - what Launch School, Le Wagon, Hack Reactor, App Academy, Interview Kickstart, Codesmith, Wall Street analyst training and quant-firm prep actually do, with sources, mapped to DEVI features
@@ -87,37 +100,53 @@ resource that already exists costs nothing. After adding links, re-run the check
 
 ## Run
 
-```bash
+**React UI (primary)** — two terminals:
+
+```powershell
 cd "D:\Machine Learning Projects\Project Devi"
+.venv\Scripts\python.exe -m uvicorn api.main:app --reload --port 8000   # API
+cd web; npm run dev                                                     # SPA on :5173
+```
+
+Then open http://localhost:5173. To run the production shape (FastAPI serving the built SPA), `cd web; npm run build` and open http://localhost:8000.
+
+**Streamlit UI (fallback)**:
+
+```bash
 .venv\Scripts\activate
-streamlit run streamlit_app.py
+streamlit run streamlit_app.py     # http://localhost:8501
 ```
 
 Or double-click `run.bat`.
-
-App opens at http://localhost:8501
 
 ## Deploy
 
 Render's free Docker tier works, with one caveat: its filesystem is wiped on every
 restart, deploy and spin-down, so the app ships a one-click **Profile -> Backup & restore**
 and a keep-alive workflow. Free instances sleep after 15 idle minutes; `.github/workflows/keepalive.yml`
-(or an UptimeRobot monitor) prevents that. Vercel does not work: Streamlit needs a
-long-lived process and websockets, and its state is a JSON file, not a serverless function.
-`Dockerfile` and `render.yaml` (free plan, no disk) are included; the full walkthrough,
-limits and upgrade path are in **[DEPLOY.md](DEPLOY.md)**.
+(or an UptimeRobot monitor) prevents that.
+
+The image is a single service: stage 1 builds the SPA with Node, stage 2 installs
+`requirements-api.txt` (no Streamlit) and runs uvicorn, which serves both `/api/*` and
+`web/dist`. One process, no CORS, no second host. `Dockerfile` and `render.yaml`
+(free plan, no disk) are included; the full walkthrough, limits and upgrade path are in
+**[DEPLOY.md](DEPLOY.md)**.
 
 ```bash
 docker build -t project-devi .
-docker run --rm -p 8501:8501 -e DEVI_PASSWORD=test project-devi
+docker run --rm -p 8000:8000 -e DEVI_PASSWORD=test project-devi
 ```
 
-Two environment variables matter in production: `DEVI_PASSWORD` (gates the whole app)
-and, only if you attach a disk, `DEVI_DATA_DIR` (point it at the mount). `DEVI_ALLOW_CONSOLE=0`
-disables the Python console on an instance you share.
+Env vars that matter in production: `DEVI_PASSWORD` (gates the API), `DEVI_SECRET`
+(session-cookie pepper), `DEVI_COOKIE_SECURE=1` (HTTPS-only cookie), and, only if you
+attach a disk, `DEVI_DATA_DIR`.
 
 A cursor jiggler does not keep Render awake — only real HTTP requests count. The health
-endpoint `/_stcore/health` is the right target: no password, no session, no data writes.
+endpoints `/api/health` and `/_stcore/health` are the right targets: no password, no
+session, no data writes.
 
 ## Stack
-Python 3.14 locally, 3.13 in the container, Streamlit 1.66, NumPy, pandas, scikit-learn, scipy, plotly.
+
+Python 3.14 locally, 3.13 in the container. Engine: NumPy, pandas, scikit-learn, scipy.
+API: FastAPI + uvicorn, JSON state in `data/`. UI: React 19, TypeScript, Vite 8,
+Tailwind CSS v4, React Router 7. Streamlit 1.66 remains installed locally for the fallback UI.

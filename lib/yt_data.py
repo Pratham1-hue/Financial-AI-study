@@ -6,8 +6,7 @@ so browsing costs zero quota and never blocks on an API call.
 import json
 import os
 
-import streamlit as st
-
+from lib.cache import cache_data
 from lib.paths import DATA_DIR
 
 CATALOG = os.path.join(DATA_DIR, "yt_catalog.json")
@@ -41,7 +40,7 @@ def fmt_views(n):
     return f"{n} views"
 
 
-@st.cache_data(show_spinner=False)
+@cache_data(show_spinner=False)
 def _catalog_cached(mtime):
     d = _read(CATALOG, _EMPTY_CATALOG)
     d.setdefault("videos", {})
@@ -49,7 +48,7 @@ def _catalog_cached(mtime):
     return d
 
 
-@st.cache_data(show_spinner=False)
+@cache_data(show_spinner=False)
 def _curriculum_cached(mtime):
     d = _read(CURRICULUM, _EMPTY_CURRICULUM)
     d.setdefault("modules", {})

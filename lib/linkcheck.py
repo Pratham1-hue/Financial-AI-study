@@ -2,14 +2,13 @@
 import json
 import os
 
-import streamlit as st
-
+from lib.cache import cache_data
 from lib.paths import DATA_DIR
 
 CHECKS = os.path.join(DATA_DIR, "link_check.json")
 
 
-@st.cache_data(show_spinner=False)
+@cache_data(show_spinner=False)
 def _load(mtime):
     try:
         with open(CHECKS, "r", encoding="utf-8") as f:

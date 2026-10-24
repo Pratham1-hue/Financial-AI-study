@@ -10,5 +10,9 @@ services:
     envVars:
       - key: DEVI_PASSWORD
         sync: false         # set in the Render dashboard; never commit it
+      - key: DEVI_SECRET
+        sync: false         # optional extra pepper for the session cookie
+      - key: DEVI_COOKIE_SECURE
+        value: "1"          # Render terminates TLS, so the cookie is HTTPS-only
       - key: YOUTUBE_API_KEY
         sync: false

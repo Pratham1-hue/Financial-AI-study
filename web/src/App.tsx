@@ -2,16 +2,20 @@ import { useCallback, useEffect, useState } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
 import { Shell } from './components/Shell'
+import { Toaster } from './components/Toast'
 import { Button, Card, Spinner } from './components/ui'
 import { Skyline } from './components/Skyline'
 import { api, type Session } from './lib/api'
 import { Dashboard } from './pages/Dashboard'
 import { Desk } from './pages/Desk'
+import { Exams } from './pages/Exams'
 import { Focus } from './pages/Focus'
 import { Labs } from './pages/Labs'
 import { Learn } from './pages/Learn'
 import { Login } from './pages/Login'
+import { Profile } from './pages/Profile'
 import { Quizzes } from './pages/Quizzes'
+import { Resources } from './pages/Resources'
 import { AppProvider } from './state/app'
 import { ThemeProvider } from './theme'
 
@@ -68,6 +72,32 @@ export default function App() {
     return () => window.removeEventListener('devi:unauthorized', onUnauthorized)
   }, [loadSession])
 
+  // global quick-jump hotkeys: d desk · f focus · l learn · q quizzes · x exams · r resources · p profile · h home
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement)
+        return
+      const key = e.key.toLowerCase()
+      const map: Record<string, string> = {
+        d: '/desk',
+        f: '/focus',
+        l: '/learn',
+        q: '/quizzes',
+        x: '/exams',
+        r: '/resources',
+        p: '/profile',
+        h: '/',
+      }
+      const to = map[key]
+      if (to) {
+        e.preventDefault()
+        window.dispatchEvent(new CustomEvent('devi:navigate', { detail: { to } }))
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
   return (
     <ThemeProvider>
       {error ? (
@@ -79,6 +109,7 @@ export default function App() {
       ) : (
         <BrowserRouter>
           <AppProvider>
+            <Toaster />
             <Routes>
               <Route element={<Shell />}>
                 <Route index element={<Dashboard />} />
@@ -87,6 +118,9 @@ export default function App() {
                 <Route path="quizzes" element={<Quizzes />} />
                 <Route path="desk" element={<Desk />} />
                 <Route path="labs" element={<Labs />} />
+                <Route path="exams" element={<Exams />} />
+                <Route path="resources" element={<Resources />} />
+                <Route path="profile" element={<Profile />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Route>
             </Routes>

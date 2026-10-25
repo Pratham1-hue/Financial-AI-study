@@ -230,3 +230,118 @@ export function Notice({
   }
   return <div className={cx('rounded-xl border px-4 py-3 text-[0.85rem]', tones[tone])}>{children}</div>
 }
+
+/* ---------------------------------------------------------------- extras */
+
+export function Avatar({ src, name, size = 32 }: { src?: string; name: string; size?: number }) {
+  const initial = name.trim().split(/\s+/).map((w) => w[0]).join('').toUpperCase().slice(0, 2) || '?'
+  return (
+    <div
+      className={cx(
+        'flex shrink-0 items-center justify-center rounded-full border border-line-strong',
+        src ? 'bg-surface-2' : 'bg-gold text-white',
+        `h-${size} w-${size}`,
+        'text-[0.75rem] font-semibold',
+      )}
+    >
+      {src ? <img src={src} alt="" className="rounded-full h-full w-full object-cover" /> : initial}
+    </div>
+  )
+}
+
+export function ProgressRing({ pct, size = 110, stroke = 10, color = 'var(--gold)', label, sub }: {
+  pct: number
+  size?: number
+  stroke?: number
+  color?: string
+  label?: string
+  sub?: string
+}) {
+  const r = (size - stroke) / 2
+  const c = 2 * Math.PI * r
+  const v = Math.max(0, Math.min(1, pct))
+  return (
+    <div className="relative" style={{ width: size, height: size }}>
+      <svg width={size} height={size} className="-rotate-90">
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--border)" strokeWidth={stroke} />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="none"
+          stroke={color}
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeDasharray={c}
+          strokeDashoffset={c * (1 - v)}
+          style={{ transition: 'stroke-dashoffset 0.7s ease' }}
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        {label ? <div className={cx('mono text-[1.1rem] leading-none font-bold text-ink', label.includes('%') ? 'text-gold' : '')}>{label}</div> : null}
+        {sub ? <div className="mt-1 text-[0.68rem] font-semibold tracking-[0.14em] text-muted uppercase">{sub}</div> : null}
+      </div>
+    </div>
+  )
+}
+
+export function Chip({ children, tone = 'neutral', className }: { children: ReactNode; tone?: 'neutral' | 'gold' | 'ok' | 'bad' | 'warn'; className?: string }) {
+  const tones = {
+    neutral: 'bg-surface-2 text-muted border-line',
+    gold: 'bg-gold-soft text-gold border-[color-mix(in_srgb,var(--gold)_35%,transparent)]',
+    ok: 'bg-ok-soft text-ok border-[color-mix(in_srgb,var(--ok)_30%,transparent)]',
+    bad: 'bg-bad-soft text-bad border-[color-mix(in_srgb,var(--bad)_30%,transparent)]',
+    warn: 'bg-warn-soft text-warn border-[color-mix(in_srgb,var(--warn)_30%,transparent)]',
+  }
+  return (
+    <span
+      className={cx(
+        'inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-[0.76rem] font-semibold',
+        tones[tone],
+        className,
+      )}
+    >
+      {children}
+    </span>
+  )
+}
+
+/** Button with optional loading state. */
+export function LoadingButton({
+  children,
+  loading,
+  variant = 'primary',
+  className,
+  ...rest
+}: ButtonHTMLAttributes<HTMLButtonElement> & { loading?: boolean; variant?: Variant }) {
+  return (
+    <Button variant={variant} className={className} disabled={loading} {...rest}>
+      {loading ? (
+        <>
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+          <span className="sr-only">Loading…</span>
+        </>
+      ) : (
+        children
+      )}
+    </Button>
+  )
+}
+
+export function SectionStep({ index, label, done, active }: { index: number; label: string; done: boolean; active: boolean }) {
+  return (
+    <div className="flex items-center gap-2">
+      <span
+        className={cx(
+          'shrink-0 grid h-7 w-7 place-items-center rounded-full text-[0.72rem] font-bold mono',
+          done ? 'bg-ok text-white' : active ? 'bg-gold text-white' : 'bg-bg-soft text-muted',
+        )}
+      >
+        {done ? '✓' : index}
+      </span>
+      <span className={cx('font-semibold', done ? 'text-ok' : active ? 'text-gold' : 'text-muted')}>
+        {label}
+      </span>
+    </div>
+  )
+}

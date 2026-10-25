@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from api.routers import core, desk, focus as focus_router, labs, learn, quiz
+from api.routers import core, desk, exam, focus as focus_router, labs, learn, quiz, backup
 from api.security import COOKIE, verify_token
 
 app = FastAPI(title="Project DEVI", version="2.0.0")
@@ -46,7 +46,7 @@ def legacy_health():
     return {"status": "ok"}
 
 
-for r in (core.router, learn.router, focus_router.router, quiz.router, desk.router, labs.router):
+for r in (core.router, learn.router, focus_router.router, quiz.router, desk.router, labs.router, exam.router, backup.router):
     app.include_router(r, prefix="/api")
 
 DIST = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "web", "dist")

@@ -163,7 +163,8 @@ export function Shell() {
                   className={navLinkCls}
                 >
                   <Icon d={item.icon} className="h-4 w-4 opacity-75" />
-                  <span>{item.label}</span>
+                  {/* labels only at wider widths so the rail can never collide with the action buttons */}
+                  <span className="hidden 2xl:inline-block">{item.label}</span>
                 </NavLink>
               ))}
             </nav>

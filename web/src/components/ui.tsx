@@ -55,8 +55,8 @@ type Variant = 'primary' | 'secondary' | 'ghost' | 'danger'
 const VARIANTS: Record<Variant, string> = {
   primary:
     'bg-gold text-white border border-transparent hover:brightness-[1.06] shadow-[0_2px_10px_rgba(168,105,26,0.25)]',
-  secondary: 'bg-surface text-ink border border-line-strong hover:bg-surface-2',
-  ghost: 'bg-transparent text-ink-soft border border-transparent hover:bg-surface-2',
+  secondary: 'glass-btn',
+  ghost: 'bg-transparent text-ink-soft border border-transparent hover:bg-[var(--glass-lo)] hover:text-ink',
   danger: 'bg-bad text-white border border-transparent hover:brightness-110',
 }
 
@@ -95,7 +95,7 @@ export function Badge({
   className?: string
 }) {
   const tones = {
-    neutral: 'bg-surface-2 text-muted border-line',
+    neutral: 'bg-[var(--glass-lo)] text-muted border-[var(--glass-border)]',
     gold: 'bg-gold-soft text-gold border-[color-mix(in_srgb,var(--gold)_35%,transparent)]',
     ok: 'bg-ok-soft text-ok border-[color-mix(in_srgb,var(--ok)_30%,transparent)]',
     bad: 'bg-bad-soft text-bad border-[color-mix(in_srgb,var(--bad)_30%,transparent)]',
@@ -151,7 +151,7 @@ export function Bar({
   const bg = { gold: 'var(--gold)', ok: 'var(--ok)', bad: 'var(--bad)', navy: 'var(--navy)' }[tone]
   return (
     <div>
-      <div className="h-2 w-full overflow-hidden rounded-full bg-bg-soft">
+      <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--glass-lo)]">
         <div className="h-full rounded-full transition-[width] duration-500" style={{ width: `${pct}%`, background: bg }} />
       </div>
       {label ? <div className="mt-1.5 text-[0.76rem] text-muted">{label}</div> : null}
@@ -169,15 +169,12 @@ export function Tabs<T extends string>({
   onChange: (id: T) => void
 }) {
   return (
-    <div className="mb-5 inline-flex gap-1 rounded-xl border border-line bg-surface-2 p-1">
+    <div className="glass-tabs mb-5">
       {tabs.map((t) => (
         <button
           key={t.id}
           onClick={() => onChange(t.id)}
-          className={cx(
-            'rounded-lg px-3.5 py-1.5 text-[0.82rem] font-semibold transition',
-            value === t.id ? 'bg-surface text-ink shadow-sm' : 'text-muted hover:text-ink',
-          )}
+          className={cx('glass-tab', value === t.id && 'glass-tab-active')}
         >
           {t.label}
         </button>
@@ -196,8 +193,7 @@ export function Field({ label, children, hint }: { label: string; children: Reac
   )
 }
 
-export const inputCls =
-  'w-full rounded-xl border border-line-strong bg-surface px-3 py-2 text-[0.9rem] text-ink outline-none transition placeholder:text-muted focus:border-gold focus:ring-2 focus:ring-[color-mix(in_srgb,var(--gold)_25%,transparent)]'
+export const inputCls = 'input-glass'
 
 export function Spinner({ label = 'Loading' }: { label?: string }) {
   return (
@@ -210,7 +206,7 @@ export function Spinner({ label = 'Loading' }: { label?: string }) {
 
 export function Empty({ children }: { children: ReactNode }) {
   return (
-    <div className="rounded-xl border border-dashed border-line-strong bg-surface-2 px-5 py-8 text-center text-sm text-muted">
+    <div className="rounded-xl border border-dashed border-[var(--glass-border)] bg-[var(--glass-lo)] px-5 py-8 text-center text-sm text-muted">
       {children}
     </div>
   )
@@ -224,7 +220,7 @@ export function Notice({
   children: ReactNode
 }) {
   const tones = {
-    info: 'border-line bg-surface-2 text-ink-soft',
+    info: 'border-[var(--glass-border)] bg-[var(--glass-lo)] text-ink-soft',
     ok: 'border-[color-mix(in_srgb,var(--ok)_30%,transparent)] bg-ok-soft text-ok',
     bad: 'border-[color-mix(in_srgb,var(--bad)_30%,transparent)] bg-bad-soft text-bad',
     warn: 'border-[color-mix(in_srgb,var(--warn)_30%,transparent)] bg-warn-soft text-warn',
@@ -289,7 +285,7 @@ export function ProgressRing({ pct, size = 110, stroke = 10, color = 'var(--gold
 
 export function Chip({ children, tone = 'neutral', className }: { children: ReactNode; tone?: 'neutral' | 'gold' | 'ok' | 'bad' | 'warn'; className?: string }) {
   const tones = {
-    neutral: 'bg-surface-2 text-muted border-line',
+    neutral: 'bg-[var(--glass-lo)] text-muted border-[var(--glass-border)]',
     gold: 'bg-gold-soft text-gold border-[color-mix(in_srgb,var(--gold)_35%,transparent)]',
     ok: 'bg-ok-soft text-ok border-[color-mix(in_srgb,var(--ok)_30%,transparent)]',
     bad: 'bg-bad-soft text-bad border-[color-mix(in_srgb,var(--bad)_30%,transparent)]',

@@ -4,13 +4,13 @@ from datetime import date
 
 from lib.code_runner import run_python
 
-MARKER = "@@DEVI_RESULTS@@"
+MARKER = "@@LAKSH_RESULTS@@"
 
 HARNESS = """
 
 import json as __json
 __results = []
-for __name, __src in __DEVI_TESTS__:
+for __name, __src in __LAKSH_TESTS__:
     try:
         exec(__src, globals())
         __results.append([__name, True, ""])
@@ -225,7 +225,7 @@ def toy_of_the_day():
 
 def grade(code, challenge, timeout=20):
     """Run user code + tests in a subprocess. Returns (results, stdout, stderr)."""
-    script = code + "\n__DEVI_TESTS__ = " + repr(challenge["tests"]) + HARNESS.replace("{marker}", MARKER)
+    script = code + "\n__LAKSH_TESTS__ = " + repr(challenge["tests"]) + HARNESS.replace("{marker}", MARKER)
     out, err, rc = run_python(script, timeout=timeout)
     results = None
     clean = []

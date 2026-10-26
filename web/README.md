@@ -1,6 +1,6 @@
-# Project DEVI — web
+# Project Laksh — web
 
-The React front end for Project DEVI: a personal finance + AI academy that renders the
+The React front end for Project Laksh: a personal finance + AI academy that renders the
 `lib/` engine through a FastAPI API.
 
 Vite + React 19 + TypeScript + Tailwind CSS v4 + React Router 7.

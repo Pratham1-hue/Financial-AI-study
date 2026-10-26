@@ -1,4 +1,4 @@
-# Project DEVI - Finance & AI Academy
+# Project Laksh - Finance & AI Academy
 
 A personal, strict 16-week learning platform to master **Financial Knowledge + AI/ML** and land the greatest job in New York City.
 
@@ -24,7 +24,7 @@ The primary UI is a **React 19 + TypeScript + Tailwind v4** SPA in `web/`, serve
 cd web; npm run dev
 ```
 
-Core pages: **Dashboard** (day score, the five-block loop, $DEVI, phase progress), **Learn** (18 modules, video queue with watch tracking, curated reading), **Focus** (locked-in-hours Pomodoro whose clock runs server-side), **Quizzes** (practice sets, Leitner daily drill, mastery gates with written teach-back), **The Desk** (live 3-minute market), **Labs** (SQL, credit ML, DCF).
+Core pages: **Dashboard** (day score, the five-block loop, $LAKSH, phase progress), **Learn** (18 modules, video queue with watch tracking, curated reading), **Focus** (locked-in-hours Pomodoro whose clock runs server-side), **Quizzes** (practice sets, Leitner daily drill, mastery gates with written teach-back), **The Desk** (live 3-minute market), **Labs** (SQL, credit ML, DCF).
 
 Everything the Streamlit version did is behind these pages and the API:
 
@@ -53,7 +53,7 @@ Everything the Streamlit version did is behind these pages and the API:
 - Light "daylight Manhattan" theme by default, a one-click dark NYC-night toggle, procedural skyline, 55+ famous quotes throughout
 
 ### Bootcamp teaching patterns (researched, rebuilt)
-- **Bootcamp playbook** - what Launch School, Le Wagon, Hack Reactor, App Academy, Interview Kickstart, Codesmith, Wall Street analyst training and quant-firm prep actually do, with sources, mapped to DEVI features
+- **Bootcamp playbook** - what Launch School, Le Wagon, Hack Reactor, App Academy, Interview Kickstart, Codesmith, Wall Street analyst training and quant-firm prep actually do, with sources, mapped to Laksh features
 - **Mastery gates** (Launch School) - 18-module prerequisite tree; each gate = MCQ (80%+) + written teach-back graded against a rubric (75%+); "Not yet" = 24h wait, second "Not yet" = 72h + drill cards reset
 - **Challenge lab** (Le Wagon / Hack Reactor) - 25 auto-graded challenges (algorithms, finance, ML & stats, SQL) with hidden tests, toy problem of the day, and the 20-minute rule: hints unlock with effort, solution only after 20 min + 3 attempts
 - **Speed drills** (trading-firm screens) - timed mental math (+ − × ÷), 2/5/8-minute rounds, speed curve
@@ -133,13 +133,15 @@ The image is a single service: stage 1 builds the SPA with Node, stage 2 install
 **[DEPLOY.md](DEPLOY.md)**.
 
 ```bash
-docker build -t project-devi .
-docker run --rm -p 8000:8000 -e DEVI_PASSWORD=test project-devi
+docker build -t project-laksh .
+docker run --rm -p 8000:8000 -e LAKSH_PASSWORD=test project-laksh
 ```
 
-Env vars that matter in production: `DEVI_PASSWORD` (gates the API), `DEVI_SECRET`
-(session-cookie pepper), `DEVI_COOKIE_SECURE=1` (HTTPS-only cookie), and, only if you
-attach a disk, `DEVI_DATA_DIR`.
+Env vars that matter in production: `LAKSH_PASSWORD` (gates the API), `LAKSH_SECRET`
+(session-cookie pepper), `LAKSH_COOKIE_SECURE=1` (HTTPS-only cookie), and, only if you
+attach a disk, `LAKSH_DATA_DIR`. The pre-rename `DEVI_*` names are still read as
+fallbacks, so an existing Render service keeps working; new deployments should use
+`LAKSH_*`.
 
 A cursor jiggler does not keep Render awake — only real HTTP requests count. The health
 endpoints `/api/health` and `/_stcore/health` are the right targets: no password, no

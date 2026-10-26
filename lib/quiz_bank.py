@@ -1,4 +1,4 @@
-"""Quiz & exam question bank for Project DEVI."""
+"""Quiz & exam question bank for Project Laksh."""
 QUESTIONS = [
 # ---------- FINANCE BASICS ----------
 {"id":"f1_1","track":"finance","module":"F1","diff":"easy","q":"What is the time value of money?","opts":["Money is worth more today than the same amount in the future due to potential earning capacity","Money loses value over time due to inflation only","Future money is always worth more than present money","Interest rates do not affect money's value"],"ans":0,"exp":"A dollar today can be invested to earn returns, so it's worth more than a dollar later."},

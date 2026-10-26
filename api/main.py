@@ -1,4 +1,4 @@
-"""Project DEVI API - FastAPI in front of the existing lib/ engine.
+"""Project Laksh API - FastAPI in front of the existing lib/ engine.
 
 In production this also serves the built React app from web/dist, so Render runs
 a single free web service (API + static site, no CORS, one deploy).
@@ -14,11 +14,12 @@ from fastapi.staticfiles import StaticFiles
 
 from api.routers import core, debrief, desk, exam, focus as focus_router, labs, learn, quiz, backup
 from api.security import COOKIE, verify_token
+from lib.env import get
 
-app = FastAPI(title="Project DEVI", version="2.0.0")
+app = FastAPI(title="Project Laksh", version="2.0.0")
 
-_origins = os.environ.get(
-    "DEVI_CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174"
+_origins = get(
+    "CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174"
 ).split(",")
 app.add_middleware(
     CORSMiddleware,

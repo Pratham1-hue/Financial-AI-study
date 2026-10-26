@@ -5,6 +5,7 @@ from datetime import date, datetime, timedelta
 import streamlit as st
 
 from lib import backup
+from lib.env import get
 from lib.storage import load_profile, save_profile
 from lib.ui import hero, inject_css, section
 
@@ -39,7 +40,7 @@ with st.form("profile_form"):
 
 section("Backup & restore")
 _on_render = os.environ.get("RENDER", "").lower() == "true"
-if _on_render and not os.environ.get("DEVI_DATA_DIR"):
+if _on_render and not get("DATA_DIR"):
     st.warning(
         "This is a free Render instance: the filesystem is wiped on restart, deploy or "
         "spin-down. Download a backup after each session and restore it when you return.",
@@ -52,7 +53,7 @@ with _b[0]:
     st.download_button(
         "Download backup",
         data=backup.dumps(),
-        file_name=f"devi-backup-{date.today():%Y%m%d}.json",
+        file_name=f"laksh-backup-{date.today():%Y%m%d}.json",
         mime="application/json",
         type="primary",
         icon=":material/download:",
@@ -89,9 +90,9 @@ if uploaded is not None:
                 st.success(f"Restored: {', '.join(_written)}.")
                 st.rerun()
 
-section("About Project DEVI")
+section("About Project Laksh")
 st.markdown(
-    "Project DEVI is your personal Finance + AI academy. Strict 16-week plan, "
+    "Project Laksh is your personal Finance + AI academy. Strict 16-week plan, "
     "curated resources, practice console, quizzes, and exams - built to land the "
     "greatest job in New York City. No zero days."
 )

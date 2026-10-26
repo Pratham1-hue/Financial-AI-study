@@ -28,7 +28,7 @@ def _read(path, default):
 def snapshot():
     """Everything worth keeping: progress, profile, focus session."""
     return {
-        "app": "project-devi",
+        "app": "project-laksh",
         "version": VERSION,
         "exported_at": datetime.now().isoformat(timespec="seconds"),
         "progress": _read(PROGRESS_FILE, DEFAULT_PROGRESS),

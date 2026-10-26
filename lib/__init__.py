@@ -1,1 +1,1 @@
-"""Project DEVI shared library."""
+"""Project Laksh shared library."""

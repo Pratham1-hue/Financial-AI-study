@@ -31,10 +31,10 @@ def run_python(code, timeout=15):
 
 STARTER_EXERCISES = [
     {
-        "title": "Hello, DEVI",
-        "prompt": "Print 'Hello, DEVI!' and compute 2+2.",
-        "starter": "print('Hello, DEVI!')\nprint(2 + 2)\n",
-        "solution": "print('Hello, DEVI!')\nprint(2 + 2)\n",
+        "title": "Hello, Laksh",
+        "prompt": "Print 'Hello, Laksh!' and compute 2+2.",
+        "starter": "print('Hello, Laksh!')\nprint(2 + 2)\n",
+        "solution": "print('Hello, Laksh!')\nprint(2 + 2)\n",
     },
     {
         "title": "NumPy: array stats",

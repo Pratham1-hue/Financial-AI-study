@@ -4,7 +4,7 @@ from lib.ui import hero, inject_css, section
 
 inject_css()
 hero("The bootcamp <em>playbook</em>", "What the most successful career-change programs actually do in the classroom - "
-     "reverse-engineered and rebuilt inside DEVI. Hiring and placement services are intentionally left out until you're an expert.",
+     "reverse-engineered and rebuilt inside Laksh. Hiring and placement services are intentionally left out until you're an expert.",
      eyebrow="Research · teaching patterns", quote_tags=["grind"])
 
 st.info("Sources are the programs' own public pages (fetched October 2026) plus long-standing industry practice where noted. "
@@ -24,7 +24,7 @@ PLAYBOOK = [
             "**Three learning phases**: Explore (top-down, play) → Study (bottom-up, deconstruct, deliberate practice) → Professional (trade-offs, architecture).",
             "Pedagogy draws on Barbara Oakley, Carol Dweck, K. Anders Ericsson, Kathy Sierra and Henry Roediger III.",
         ],
-        "devi": [("Mastery gates with prerequisites, \"Not yet\" + 24h/72h waits", "app_pages/18_gates.py"),
+        "laksh": [("Mastery gates with prerequisites, \"Not yet\" + 24h/72h waits", "app_pages/18_gates.py"),
                  ("Teach-back (oral-style) assessments", "app_pages/18_gates.py"),
                  ("Locked-in hours as the core metric", "app_pages/12_lock_in.py")],
     },
@@ -38,7 +38,7 @@ PLAYBOOK = [
             "**Live correction** at the end of each day: the teacher walks through the important challenges.",
             "**Real projects** that become the portfolio.",
         ],
-        "devi": [("Bootcamp-day schedule on Today's mission", "app_pages/15_mission.py"),
+        "laksh": [("Bootcamp-day schedule on Today's mission", "app_pages/15_mission.py"),
                  ("Auto-graded challenges + reference-solution review", "app_pages/19_challenge_lab.py")],
     },
     {
@@ -49,7 +49,7 @@ PLAYBOOK = [
             "**Debug AI-generated code like a professional**, and reflect critically on its limits.",
             "**Daily algorithmic warm-ups (\"toy problems\")** - a long-standing part of the immersive format (industry practice).",
         ],
-        "devi": [("Toy problem of the day", "app_pages/19_challenge_lab.py"),
+        "laksh": [("Toy problem of the day", "app_pages/19_challenge_lab.py"),
                  ("Feynman debrief: explain it in your own words", "app_pages/15_mission.py")],
     },
     {
@@ -60,7 +60,7 @@ PLAYBOOK = [
             "**Frequent, high-stakes assessments** that you must pass to continue - widely described by alumni (industry practice).",
             "**Productive struggle norms** - work on a problem for a set time before asking for help (common bootcamp practice).",
         ],
-        "devi": [("Exams, quizzes at 80%+, mastery gates", "app_pages/08_exams.py"),
+        "laksh": [("Exams, quizzes at 80%+, mastery gates", "app_pages/08_exams.py"),
                  ("The 20-minute rule before hints and solutions", "app_pages/19_challenge_lab.py")],
     },
     {
@@ -72,7 +72,7 @@ PLAYBOOK = [
             "**Train your brain to think and communicate under real interview conditions.**",
             "Rigor: successful alumni put in a few hours a day, every day.",
         ],
-        "devi": [("Timed interview gauntlet with model key points", "app_pages/17_gauntlet.py"),
+        "laksh": [("Timed interview gauntlet with model key points", "app_pages/17_gauntlet.py"),
                  ("Daily locked-in hours goal", "app_pages/12_lock_in.py")],
     },
     {
@@ -83,7 +83,7 @@ PLAYBOOK = [
             "**Validate demonstrated capability** through practical work, technical assessment and applied performance - not attendance.",
             "Curriculum built around **real technical work**.",
         ],
-        "devi": [("Mastery Index: only provable capability counts", "app_pages/13_career_stock.py"),
+        "laksh": [("Mastery Index: only provable capability counts", "app_pages/13_career_stock.py"),
                  ("Capstone projects in the study plan", "app_pages/02_study_plan.py")],
     },
     {
@@ -95,7 +95,7 @@ PLAYBOOK = [
             "**Timed modeling tests** - paper LBOs in minutes, three-statement builds under a clock.",
             "Memorize IRR shortcuts (2x in 3 years ≈ 26%, 2x in 5 years ≈ 15%, 3x in 5 years ≈ 25%).",
         ],
-        "devi": [("Finance challenges incl. timed paper LBO", "app_pages/19_challenge_lab.py"),
+        "laksh": [("Finance challenges incl. timed paper LBO", "app_pages/19_challenge_lab.py"),
                  ("F2 → F3 gate order (accounting before valuation)", "app_pages/18_gates.py")],
     },
     {
@@ -106,7 +106,7 @@ PLAYBOOK = [
             "**Daily probability and brain-teaser practice** (Heard on the Street, the \"Green Book\").",
             "**Market-making games and expected-value reasoning** under time pressure.",
         ],
-        "devi": [("Speed drills in trading-firm format", "app_pages/20_speed_drills.py"),
+        "laksh": [("Speed drills in trading-firm format", "app_pages/20_speed_drills.py"),
                  ("Quant brain teasers in the gauntlet", "app_pages/17_gauntlet.py")],
     },
 ]
@@ -139,8 +139,8 @@ for p in PLAYBOOK:
         st.link_button("Source", p["source"], icon=":material/open_in_new:")
     with right:
         with st.container(border=True):
-            st.markdown("**Inside DEVI**")
-            for label, page in p["devi"]:
+            st.markdown("**Inside Laksh**")
+            for label, page in p["laksh"]:
                 st.page_link(page, label=label, icon=":material/arrow_forward:")
 
 section("Deliberately not copied (yet)")

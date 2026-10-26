@@ -1,9 +1,16 @@
 """Smoke test for the FastAPI layer. Run: .venv\\Scripts\\python.exe scripts\\api_smoke.py"""
 import os
 import sys
+import tempfile
 
 sys.stdout.reconfigure(encoding="utf-8")
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Never touch the real study record. Unless a data dir is supplied explicitly,
+# run against a throwaway directory (the old script mutated data/progress.json).
+if not (os.environ.get("LAKSH_DATA_DIR") or os.environ.get("DEVI_DATA_DIR")):
+    os.environ["LAKSH_DATA_DIR"] = tempfile.mkdtemp(prefix="laksh-smoke-")
+    print(f"data dir: {os.environ['LAKSH_DATA_DIR']} (temporary)")
 
 from fastapi.testclient import TestClient  # noqa: E402
 

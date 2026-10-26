@@ -85,9 +85,9 @@ export function Resources() {
                     href={r.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-start gap-3 rounded-xl border px-3.5 py-3 transition hover:border-gold"
+                    className="glass-tile flex items-start gap-3 rounded-xl px-3.5 py-3 transition hover:border-gold"
                   >
-                    <div className="mt-0.5 shrink-0 rounded-lg border px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-wider">
+                    <div className="mt-0.5 shrink-0 rounded-lg border border-[var(--glass-border)] bg-[var(--glass-lo)] px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-wider">
                       {r.track}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -110,7 +110,7 @@ export function Resources() {
                     href={r.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="rounded-xl border border-line bg-surface-2 p-4 transition hover:border-gold hover:shadow-sm"
+                    className="glass-tile rounded-xl p-4 transition hover:border-gold hover:shadow-sm"
                   >
                     <div className="flex items-center justify-between mb-2">
                       <Badge tone="neutral">{r.type}</Badge>
@@ -135,7 +135,7 @@ export function Resources() {
             <p className="text-[0.85rem] text-muted">
               Every resource has been checked with an automated link checker — no dead links, no
               paywall-only traps where avoidable. Resources open in a new tab so you never lose your
-              place in DEVI.
+              place in Laksh.
             </p>
             <div className="mt-4 space-y-2">
               <div className="flex items-center gap-2 text-[0.82rem]">

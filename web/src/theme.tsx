@@ -11,7 +11,7 @@ const ThemeCtx = createContext<{ theme: Theme; toggle: () => void; set: (t: Them
 })
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useLocalStorage<Theme>('devi-theme', 'light')
+  const [theme, setTheme] = useLocalStorage<Theme>('laksh-theme', 'light')
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)

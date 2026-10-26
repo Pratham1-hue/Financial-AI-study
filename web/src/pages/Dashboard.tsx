@@ -50,7 +50,7 @@ export function Dashboard() {
       <Confetti fire={streakFire} />
 
       {/* hero */}
-      <Card className="fade-up relative overflow-hidden p-0" padded={false}>
+      <Card className="hero fade-up relative overflow-hidden p-0" padded={false}>
         <div className="relative grid gap-6 p-7 md:grid-cols-[1fr_auto] md:items-center">
           <div className="relative z-10">
             <div className="flex items-center gap-2 mb-2">
@@ -182,7 +182,7 @@ export function Dashboard() {
 
         <div className="space-y-5">
           <Card>
-            <SectionTitle hint={<Link to="/desk" className="text-gold">trade →</Link>}>$DEVI — stock of you</SectionTitle>
+            <SectionTitle hint={<Link to="/desk" className="text-gold">trade →</Link>}>$LAKSH — stock of you</SectionTitle>
             <div className="flex items-end justify-between">
               <div>
                 <div className="mono text-[2rem] leading-none font-bold text-ink">${stock.price.toFixed(2)}</div>

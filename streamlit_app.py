@@ -1,4 +1,4 @@
-"""Project DEVI - entry point."""
+"""Project Laksh - entry point."""
 import hmac
 import os
 import time
@@ -8,12 +8,13 @@ import streamlit as st
 
 from lib import accountability as acc
 from lib import focus, srs
+from lib.env import get
 from lib.nyc import rank_for
 from lib.storage import load_profile, load_progress, log_study_day
 from lib.ui import inject_css
 
 st.set_page_config(
-    page_title="Project DEVI - Finance & AI Academy",
+    page_title="Project Laksh - Finance & AI Academy",
     page_icon=":material/location_city:",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -25,37 +26,37 @@ inject_css()
 def _configured_password():
     """Secret first, then environment. No value means the gate is off (local use)."""
     try:
-        value = st.secrets.get("DEVI_PASSWORD")
+        value = st.secrets.get("LAKSH_PASSWORD") or st.secrets.get("DEVI_PASSWORD")
         if value:
             return str(value)
     except Exception:
         pass
-    return os.environ.get("DEVI_PASSWORD")
+    return get("PASSWORD")
 
 
 _GATE = _configured_password()
 
-if _GATE and not st.session_state.get("devi_authed"):
+if _GATE and not st.session_state.get("laksh_authed"):
     _, _mid, _ = st.columns([1, 1.15, 1])
     with _mid:
         st.html(
             '<div style="text-align:center;margin:10vh 0 18px">'
             '<div class="nyc-eyebrow">Private</div>'
-            '<h1 style="margin:6px 0 2px">Project <em>DEVI</em></h1>'
+            '<h1 style="margin:6px 0 2px">Project <em>Laksh</em></h1>'
             '<p style="color:#94A3B8;margin:0">Finance &amp; AI academy. Members only.</p>'
             "</div>"
         )
-        with st.form("devi_login", border=True):
+        with st.form("laksh_login", border=True):
             _pw = st.text_input("Password", type="password", label_visibility="collapsed",
                                 placeholder="Password")
             _entered = st.form_submit_button("Enter", type="primary", width="stretch")
         if _entered:
             if hmac.compare_digest(_pw.encode("utf-8"), _GATE.encode("utf-8")):
-                st.session_state["devi_authed"] = True
+                st.session_state["laksh_authed"] = True
                 st.rerun()
             time.sleep(0.6)
             st.error("Wrong password.")
-        st.caption("Access is gated because `DEVI_PASSWORD` is set for this deployment.")
+        st.caption("Access is gated because `LAKSH_PASSWORD` is set for this deployment.")
     st.stop()
 
 log_study_day(load_progress())
@@ -104,7 +105,7 @@ nav = st.navigation(pages)
 _state = focus.load_state()
 _ev = focus.tick(_state)
 if _ev:
-    st.session_state["devi_event"] = _ev
+    st.session_state["laksh_event"] = _ev
 
 with st.sidebar:
     if nav.url_path != "lock-in":
@@ -114,7 +115,7 @@ with st.sidebar:
                 s = focus.load_state()
                 ev = focus.tick(s)
                 if ev:
-                    st.session_state["devi_event"] = ev
+                    st.session_state["laksh_event"] = ev
                     st.rerun()
                 color = "#64748B" if s["status"] == "paused" else focus.PHASE_COLOR[s["phase"]]
                 st.html(
@@ -133,16 +134,16 @@ with st.sidebar:
     st.progress(min(1.0, _today / max(_goal, 1)),
                 text=f"Today: {focus.fmt_hm(_today)} / {focus.fmt_hm(_goal)} locked in")
     st.caption(f"NYC · {datetime.now().strftime('%a %d %b, %H:%M')} local")
-    if os.environ.get("RENDER", "").lower() == "true" and not os.environ.get("DEVI_DATA_DIR"):
+    if os.environ.get("RENDER", "").lower() == "true" and not get("DATA_DIR"):
         st.warning("Free instance: progress resets on restart.", icon=":material/warning:")
         st.page_link("app_pages/10_profile.py", label="Back up progress",
                      icon=":material/download:")
     if _GATE and st.button("Sign out", icon=":material/logout:", width="stretch"):
-        st.session_state.pop("devi_authed", None)
+        st.session_state.pop("laksh_authed", None)
         st.rerun()
 
 # Celebrations and alerts (set by any timer fragment).
-_event = st.session_state.pop("devi_event", None)
+_event = st.session_state.pop("laksh_event", None)
 if _event:
     _s = focus.load_state()
     if _event["type"] == "focus_done":

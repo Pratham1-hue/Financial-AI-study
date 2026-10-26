@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: project-devi
+    name: project-laksh
     runtime: docker
     plan: free             # sleeps after 15 idle minutes; no persistent disk (see DEPLOY.md)
     region: ohio
@@ -8,11 +8,11 @@ services:
     healthCheckPath: /_stcore/health
     autoDeploy: false       # on free tier a deploy wipes progress: export first, then deploy
     envVars:
-      - key: DEVI_PASSWORD
+      - key: LAKSH_PASSWORD
         sync: false         # set in the Render dashboard; never commit it
-      - key: DEVI_SECRET
+      - key: LAKSH_SECRET
         sync: false         # optional extra pepper for the session cookie
-      - key: DEVI_COOKIE_SECURE
+      - key: LAKSH_COOKIE_SECURE
         value: "1"          # Render terminates TLS, so the cookie is HTTPS-only
       - key: YOUTUBE_API_KEY
         sync: false

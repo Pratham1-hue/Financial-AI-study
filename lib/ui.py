@@ -1,4 +1,4 @@
-"""Shared UI helpers and NYC-night styling for Project DEVI."""
+"""Shared UI helpers and NYC-night styling for Project Laksh."""
 import html as _html
 import math
 
@@ -7,7 +7,7 @@ import streamlit as st
 from lib.nyc import skyline_svg
 from lib.quotes import quote_for
 
-DEVI_CSS = """
+LAKSH_CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,500&family=Inter:wght@400;500;600;700&family=Great+Vibes&family=JetBrains+Mono:wght@400;700&display=swap');
 :root {
@@ -50,10 +50,10 @@ header[data-testid="stHeader"] { display: none !important; }
 .skyline { margin: 10px -32px 0 -32px; line-height: 0; height: 112px; overflow: hidden; }
 .nyc-hero.big .skyline { height: 118px; }
 .skyline svg { width: 100%; height: 100%; display: block; }
-.blink { animation: devi-blink 1.8s infinite; }
-.twinkle { animation: devi-twinkle 3.2s infinite ease-in-out; }
-@keyframes devi-blink { 0%, 100% { opacity: 1; } 50% { opacity: .1; } }
-@keyframes devi-twinkle { 0%, 100% { opacity: .9; } 50% { opacity: .2; } }
+.blink { animation: laksh-blink 1.8s infinite; }
+.twinkle { animation: laksh-twinkle 3.2s infinite ease-in-out; }
+@keyframes laksh-blink { 0%, 100% { opacity: 1; } 50% { opacity: .1; } }
+@keyframes laksh-twinkle { 0%, 100% { opacity: .9; } 50% { opacity: .2; } }
 
 /* ---------- cards ---------- */
 .gold-card { background: linear-gradient(135deg, rgba(245,185,66,.14), rgba(245,185,66,.02));
@@ -100,12 +100,12 @@ header[data-testid="stHeader"] { display: none !important; }
 .ticker-tape { overflow: hidden; white-space: nowrap; border: 1px solid var(--border); border-radius: 10px;
   background: #04070F; margin-bottom: 14px; width: 100%; max-width: 100%; contain: inline-size; }
 .stHtml:has(.ticker-tape), div[data-testid="stHtml"]:has(.ticker-tape) { min-width: 0; max-width: 100%; overflow: hidden; }
-.ticker-track { display: inline-block; padding: 7px 0; animation: devi-marquee 45s linear infinite;
+.ticker-track { display: inline-block; padding: 7px 0; animation: laksh-marquee 45s linear infinite;
   font-family: 'JetBrains Mono', monospace; font-size: .8rem; }
 .ticker-track span { margin: 0 24px; color: #CBD5E1; }
 .ticker-track .sym { color: #FFD982; font-weight: 700; }
 .ticker-track .up { color: #34D399; } .ticker-track .down { color: #F87171; }
-@keyframes devi-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes laksh-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
 /* ---------- offer letter & contract ---------- */
 .offer-wrap { position: relative; border-radius: 14px; overflow: hidden; }
@@ -128,7 +128,7 @@ header[data-testid="stHeader"] { display: none !important; }
 .score-big { font-family: 'Playfair Display', serif; font-size: 4.2rem; font-weight: 800; line-height: 1; }
 
 /* ---------- streamlit elements ---------- */
-.devi-section-title { font-family: 'Playfair Display', serif; font-size: 1.45rem; font-weight: 700;
+.laksh-section-title { font-family: 'Playfair Display', serif; font-size: 1.45rem; font-weight: 700;
   color: #FFFFFF; margin: 1.6rem 0 .7rem 0; padding-left: .75rem; border-left: 4px solid var(--gold); }
 div[data-testid="stMetric"] { background: var(--card); border: 1px solid var(--border);
   border-radius: 16px; padding: 12px 16px; backdrop-filter: blur(6px); }
@@ -141,7 +141,7 @@ div[data-testid="stMetricLabel"] p { letter-spacing: .06em; text-transform: uppe
 
 
 def inject_css():
-    st.markdown(DEVI_CSS, unsafe_allow_html=True)
+    st.markdown(LAKSH_CSS, unsafe_allow_html=True)
 
 
 def _esc(s):
@@ -161,7 +161,7 @@ def hero(title, subtitle, eyebrow="New York City · 40.7128° N, 74.0060° W", b
 
 
 def section(title):
-    st.markdown(f'<div class="devi-section-title">{_esc(title)}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="laksh-section-title">{_esc(title)}</div>', unsafe_allow_html=True)
 
 
 def quote_inline(q):

@@ -1,21 +1,23 @@
 """Shared-password gate for the API.
 
 Same intent as the old Streamlit gate: one password for a personal app. If
-`DEVI_PASSWORD` is unset (local development) auth is disabled entirely.
+`LAKSH_PASSWORD` (or the legacy `DEVI_PASSWORD`) is unset, local development
+auth is disabled entirely.
 """
 from __future__ import annotations
 
 import hashlib
 import hmac
-import os
 import time
 
-COOKIE = "devi_session"
+from lib.env import get
+
+COOKIE = "laksh_session"
 TTL_SECONDS = 60 * 60 * 24 * 30  # 30 days
 
 
 def _password() -> str:
-    return os.environ.get("DEVI_PASSWORD", "")
+    return get("PASSWORD")
 
 
 def auth_required() -> bool:
@@ -23,10 +25,10 @@ def auth_required() -> bool:
 
 
 def _secret() -> bytes:
-    explicit = os.environ.get("DEVI_SECRET")
+    explicit = get("SECRET")
     if explicit:
         return explicit.encode()
-    return hashlib.sha256(("devi:" + _password()).encode()).digest()
+    return hashlib.sha256(("laksh:" + _password()).encode()).digest()
 
 
 def check_password(candidate: str) -> bool:
@@ -58,4 +60,4 @@ def verify_token(token: str | None) -> bool:
 
 
 def cookie_secure() -> bool:
-    return os.environ.get("DEVI_COOKIE_SECURE", "0") == "1"
+    return get("COOKIE_SECURE", "0") == "1"

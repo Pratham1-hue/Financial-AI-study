@@ -19,7 +19,7 @@ export function LineChart({
   const h = height
   // Unique per chart instance. A fixed id made every chart on the page share
   // the first gradient (and React warned about duplicate ids).
-  const gradientId = `devi-area-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`
+  const gradientId = `laksh-area-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`
   const all = [...series, ...(compare ?? [])]
   if (all.length < 2) {
     return <div className={className} style={{ height }} />

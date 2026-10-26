@@ -101,7 +101,7 @@ def ticker_symbol(profile):
     if profile.get("ticker"):
         return profile["ticker"].upper()[:5]
     letters = re.sub(r"[^A-Za-z]", "", profile.get("name", "")).upper()
-    return (letters[:4] or "DEVI") if letters != "LEARNER" else "DEVI"
+    return "LAKSH" if letters == "LEARNER" else (letters[:4] or "LAKSH")
 
 
 # ---------- Mastery Index ----------

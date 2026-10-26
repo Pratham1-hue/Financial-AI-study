@@ -87,7 +87,7 @@ with left:
         s = focus.load_state()
         ev = focus.tick(s)
         if ev:
-            st.session_state["devi_event"] = ev
+            st.session_state["laksh_event"] = ev
             st.rerun()
 
         rem, tot = focus.remaining(s), focus.total(s)
@@ -122,7 +122,7 @@ with left:
                 st.rerun()
         if c[1].button("Stop & log", icon=":material/stop_circle:", width="stretch",
                        disabled=not (phase == "focus" and status != "idle")):
-            st.session_state["devi_event"] = {"type": "stopped", "minutes": focus.stop_and_log(s)}
+            st.session_state["laksh_event"] = {"type": "stopped", "minutes": focus.stop_and_log(s)}
             st.rerun()
         if c[2].button("Skip", icon=":material/skip_next:", width="stretch"):
             focus.skip(s)

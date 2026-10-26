@@ -1,6 +1,7 @@
 import os
 
 import streamlit as st
+from lib.env import get
 from lib.ui import hero, section, inject_css
 from lib.code_runner import run_python, STARTER_EXERCISES
 from lib.storage import load_progress, save_progress
@@ -8,10 +9,10 @@ from lib.storage import load_progress, save_progress
 inject_css()
 hero("Practice Console", "Write and run Python. ML, finance, quant - all in one sandbox.")
 
-if os.environ.get("DEVI_ALLOW_CONSOLE", "1") == "0":
+if get("ALLOW_CONSOLE", "1") == "0":
     st.info(
         "The Python console is disabled on this deployment because it executes code on the "
-        "server. Set `DEVI_ALLOW_CONSOLE=1` on a private instance to turn it back on.",
+        "server. Set `LAKSH_ALLOW_CONSOLE=1` on a private instance to turn it back on.",
         icon=":material/lock:",
     )
     st.stop()

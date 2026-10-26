@@ -22,9 +22,10 @@ import { ThemeProvider } from './theme'
 
 function Splash() {
   return (
-    <div className="grid min-h-screen place-items-center bg-bg">
+    <div className="relative grid min-h-screen place-items-center overflow-hidden px-6">
+      <div className="aurora" aria-hidden="true" />
       <div className="w-full max-w-sm text-center">
-        <div className="font-display mb-2 text-3xl font-bold text-ink">Project DEVI</div>
+        <div className="font-display mb-2 text-3xl font-bold text-ink">Project Laksh</div>
         <div className="mb-8 text-[0.8rem] font-semibold tracking-[0.22em] text-muted uppercase">Finance · AI · New York</div>
         <Skyline height={90} className="opacity-70" />
         <Spinner label="Waking up" />
@@ -35,8 +36,9 @@ function Splash() {
 
 function Fatal({ message, retry }: { message: string; retry: () => void }) {
   return (
-    <div className="grid min-h-screen place-items-center bg-bg p-6">
-      <Card className="max-w-md text-center">
+    <div className="relative grid min-h-screen place-items-center p-6">
+      <div className="aurora" aria-hidden="true" />
+      <Card className="relative max-w-md text-center">
         <h1 className="font-display text-xl font-bold text-ink">The API is not answering</h1>
         <p className="mt-2 text-sm text-muted">{message}</p>
         <p className="mt-3 text-sm text-muted">
@@ -69,8 +71,8 @@ export default function App() {
 
   useEffect(() => {
     const onUnauthorized = () => void loadSession()
-    window.addEventListener('devi:unauthorized', onUnauthorized)
-    return () => window.removeEventListener('devi:unauthorized', onUnauthorized)
+    window.addEventListener('laksh:unauthorized', onUnauthorized)
+    return () => window.removeEventListener('laksh:unauthorized', onUnauthorized)
   }, [loadSession])
 
   // global quick-jump hotkeys: d desk · f focus · l learn · q quizzes · x exams · r resources · p profile · e debrief · h home
@@ -94,7 +96,7 @@ export default function App() {
       const to = map[key]
       if (to) {
         e.preventDefault()
-        window.dispatchEvent(new CustomEvent('devi:navigate', { detail: { to } }))
+        window.dispatchEvent(new CustomEvent('laksh:navigate', { detail: { to } }))
       }
     }
     window.addEventListener('keydown', onKey)

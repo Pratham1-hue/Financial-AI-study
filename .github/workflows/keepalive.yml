@@ -4,8 +4,9 @@ name: keep-alive
 # The Starter plan in render.yaml does not sleep - if you are paying, disable this workflow.
 #
 # Setup: Settings -> Secrets and variables -> Actions -> Variables -> New variable
-#   Name:  DEVI_URL
+#   Name:  LAKSH_URL
 #   Value: https://your-app.onrender.com
+#   (the pre-rename DEVI_URL variable is still read as a fallback)
 #
 # The health endpoint is served by FastAPI (`/_stcore/health` is kept as an alias for
 # this workflow), so it needs no password, starts no session and never touches your
@@ -20,18 +21,18 @@ permissions: {}
 
 jobs:
   ping:
-    # Until the Render app exists, vars.DEVI_URL is empty. Skip cleanly instead of
-    # failing every 10 minutes; the job starts running the moment you set the variable.
-    if: ${{ vars.DEVI_URL != '' }}
+    # Until the Render app exists, the URL variable is empty. Skip cleanly instead of
+    # failing every 10 minutes; the job starts running the moment you set it.
+    if: ${{ vars.LAKSH_URL != '' || vars.DEVI_URL != '' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - name: Ping /_stcore/health
         env:
-          DEVI_URL: ${{ vars.DEVI_URL }}
+          LAKSH_URL: ${{ vars.LAKSH_URL || vars.DEVI_URL }}
         run: |
           set -euo pipefail
-          target="${DEVI_URL%/}/_stcore/health"
+          target="${LAKSH_URL%/}/_stcore/health"
           # A sleeping Render instance cold-starts on the first request, so allow time.
           code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 90 --retry 2 --retry-delay 5 \
                    "$target" || true)

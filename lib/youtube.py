@@ -139,7 +139,7 @@ def _call(endpoint, use_cache=True, **params):
 
     url = API + endpoint + "?" + urllib.parse.urlencode({**params, "key": key})
     req = urllib.request.Request(url, headers={"Accept": "application/json",
-                                               "User-Agent": "ProjectDEVI/1.0"})
+                                               "User-Agent": "ProjectLaksh/1.0"})
     try:
         with urllib.request.urlopen(req, timeout=20) as r:
             data = json.loads(r.read().decode("utf-8"))

@@ -7,7 +7,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     ...init,
   })
   if (res.status === 401 && path !== '/api/login') {
-    window.dispatchEvent(new Event('devi:unauthorized'))
+    window.dispatchEvent(new Event('laksh:unauthorized'))
     throw new Unauthorized('Not authenticated')
   }
   if (!res.ok) {

@@ -41,8 +41,8 @@ def health():
 
 
 @router.get("/session")
-def session(devi_session: str | None = Cookie(default=None)):
-    return {"auth_required": auth_required(), "authenticated": verify_token(devi_session)}
+def session(laksh_session: str | None = Cookie(default=None)):
+    return {"auth_required": auth_required(), "authenticated": verify_token(laksh_session)}
 
 
 @router.post("/login")

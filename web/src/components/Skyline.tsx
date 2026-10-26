@@ -33,13 +33,13 @@ export function Skyline({ height = 120, className }: { height?: number; classNam
       aria-hidden="true"
     >
       <defs>
-        <linearGradient id="devi-sky" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id="laksh-sky" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="var(--gold)" stopOpacity="0.30" />
           <stop offset="100%" stopColor="var(--gold)" stopOpacity="0.05" />
         </linearGradient>
       </defs>
       {buildings.map(([x, y, w, h], i) => (
-        <rect key={i} x={x} y={y} width={w} height={h} rx={1.5} fill="url(#devi-sky)" />
+        <rect key={i} x={x} y={y} width={w} height={h} rx={1.5} fill="url(#laksh-sky)" />
       ))}
       <rect x={0} y={118} width={600} height={2} fill="var(--gold)" opacity="0.35" />
     </svg>

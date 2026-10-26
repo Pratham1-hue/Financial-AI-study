@@ -71,7 +71,7 @@ def _loop_state(p):
          "to": "/labs"},
         {"name": "Prove", "done": any(a.get(k) for k in ("quiz", "quiz80", "gate", "gate_pass", "exam")),
          "to": "/quizzes"},
-        {"name": "Debrief", "done": today in p.get("debriefs", {}), "to": "/"},
+        {"name": "Debrief", "done": today in p.get("debriefs", {}), "to": "/debrief"},
     ]
     return blocks
 

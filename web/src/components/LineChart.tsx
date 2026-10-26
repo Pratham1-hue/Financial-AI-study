@@ -1,3 +1,5 @@
+import { useId } from 'react'
+
 export function LineChart({
   series,
   compare,
@@ -15,6 +17,9 @@ export function LineChart({
 }) {
   const w = 600
   const h = height
+  // Unique per chart instance. A fixed id made every chart on the page share
+  // the first gradient (and React warned about duplicate ids).
+  const gradientId = `devi-area-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`
   const all = [...series, ...(compare ?? [])]
   if (all.length < 2) {
     return <div className={className} style={{ height }} />
@@ -38,12 +43,12 @@ export function LineChart({
   return (
     <svg viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" className={className} style={{ width: '100%', height }}>
       <defs>
-        <linearGradient id="devi-area" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={color} stopOpacity="0.22" />
           <stop offset="100%" stopColor={color} stopOpacity="0" />
         </linearGradient>
       </defs>
-      <path d={area} fill="url(#devi-area)" />
+      <path d={area} fill={`url(#${gradientId})`} />
       {compare && compare.length > 1 ? (
         <path d={path(compare)} fill="none" stroke={compareColor} strokeWidth="1.5" strokeDasharray="4 4" opacity="0.7" />
       ) : null}

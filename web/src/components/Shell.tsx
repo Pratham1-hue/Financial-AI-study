@@ -12,6 +12,7 @@ const NAV = [
   { to: '/learn', label: 'Learn', hotkey: 'L', icon: 'M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 18.5A2.5 2.5 0 0 1 6.5 16H20' },
   { to: '/focus', label: 'Focus', hotkey: 'F', icon: 'M12 7v5l3 2M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z' },
   { to: '/quizzes', label: 'Quizzes', hotkey: 'Q', icon: 'M9 11l2 2 4-4M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v13A2.5 2.5 0 0 1 17.5 21h-11A2.5 2.5 0 0 1 4 18.5z' },
+  { to: '/debrief', label: 'Debrief', hotkey: 'E', icon: 'M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z' },
   { to: '/desk', label: 'The Desk', hotkey: 'D', icon: 'M3 17l5-6 4 3 5-7 4 5M3 21h18' },
   { to: '/labs', label: 'Labs', hotkey: 'B', icon: 'M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-5-9V3' },
   { to: '/exams', label: 'Exams', hotkey: 'X', icon: 'M9 12l2 2 4-4M7 8h10v8H7z' },
@@ -84,7 +85,7 @@ export function Shell() {
   }
 
   return (
-    <div className="min-h-full">
+    <div className="flex min-h-screen">
       {/* mobile drawer overlay */}
       {open ? (
         <div
@@ -96,8 +97,10 @@ export function Shell() {
       {/* sidebar */}
       <aside
         className={cx(
-          'z-40 border-r border-line bg-surface flex flex-col',
-          open ? 'fixed inset-y-0 left-0 w-[250px] md:relative md:w-[250px] md:top-0 md:h-screen md:overflow-y-auto' : 'hidden md:block',
+          'z-40 shrink-0 flex-col border-r border-line bg-surface',
+          open
+            ? 'fixed inset-y-0 left-0 flex w-[250px] md:sticky md:top-0 md:flex md:h-screen md:self-start md:overflow-y-auto'
+            : 'hidden md:sticky md:top-0 md:flex md:h-screen md:w-[250px] md:self-start md:overflow-y-auto',
         )}
       >
         <div className="flex h-full flex-col p-5">
@@ -165,7 +168,7 @@ export function Shell() {
       </aside>
 
       {/* main */}
-      <div className="flex min-h-screen min-w-0 flex-col">
+      <div className="flex min-h-screen min-w-0 flex-1 flex-col">
         <div className="sticky top-0 z-20 backdrop-blur">
           <Ticker />
           <div className="flex items-center gap-3 border-b border-line bg-surface/80 px-4 py-2.5 md:px-6">

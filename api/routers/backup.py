@@ -10,8 +10,9 @@ import json
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from lib import backup
+from lib import backup, gates
 from api import deps
+from lib.content import MODULES
 
 router = APIRouter()
 
@@ -48,9 +49,12 @@ def inspect_backup():
     return {
         "xp": p.get("xp", 0),
         "tasks": len(p.get("completed_tasks", [])),
-        "modules_done": len(p.get("quiz_scores", {})),
+        "modules_done": gates.mastered_count(p),
+        "modules_total": len(MODULES),
         "watched": len(p.get("watched", {})),
         "has_profile": isinstance(prof, dict) and bool(prof),
         "desk_rounds": len(p.get("desk_rounds", [])),
         "lab_runs": len(p.get("lab_runs", [])),
+        "labs_solved": len({(r.get("lab"), r.get("detail"))
+                            for r in p.get("lab_runs", []) if r.get("ok")}),
     }

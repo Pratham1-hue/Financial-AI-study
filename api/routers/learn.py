@@ -90,7 +90,8 @@ def mark_watched(mid: str, body: WatchBody):
 
 
 @router.get("/resources")
-def resources(track: str | None = None, cat: str | None = None, q: str | None = None, limit: int = 200):
+def resources(track: str | None = None, cat: str | None = None, q: str | None = None, limit: int = 500):
+    limit = max(1, min(limit, 1000))
     out = []
     needle = (q or "").lower().strip()
     for key, r in RESOURCES.items():

@@ -65,6 +65,11 @@ export function Dashboard() {
               {greeting}. {profile.name || 'Trader'} — today is a rep.
             </h1>
             <p className="mt-3 max-w-2xl text-[0.95rem] text-muted">{plan.assignment}</p>
+            {profile.why ? (
+              <p className="mt-3 max-w-2xl border-l-2 border-gold pl-3 text-[0.88rem] italic text-ink-soft">
+                {profile.why}
+              </p>
+            ) : null}
             <div className="mt-5 flex flex-wrap gap-2.5">
               <Link to="/focus?start=1">
                 <Button variant="primary" size="lg">

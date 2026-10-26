@@ -65,11 +65,13 @@ export function Button({
   variant = 'secondary',
   className,
   size = 'md',
+  type = 'button',
   ...rest
 }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; size?: 'sm' | 'md' | 'lg' }) {
   const sizes = { sm: 'px-3 py-1.5 text-[0.8rem]', md: 'px-4 py-2 text-[0.86rem]', lg: 'px-5 py-2.5 text-[0.95rem]' }
   return (
     <button
+      type={type}
       {...rest}
       className={cx(
         'inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition disabled:cursor-not-allowed disabled:opacity-45',
@@ -240,9 +242,9 @@ export function Avatar({ src, name, size = 32 }: { src?: string; name: string; s
       className={cx(
         'flex shrink-0 items-center justify-center rounded-full border border-line-strong',
         src ? 'bg-surface-2' : 'bg-gold text-white',
-        `h-${size} w-${size}`,
-        'text-[0.75rem] font-semibold',
+        'font-semibold',
       )}
+      style={{ width: size, height: size, fontSize: Math.max(10, Math.round(size * 0.36)) }}
     >
       {src ? <img src={src} alt="" className="rounded-full h-full w-full object-cover" /> : initial}
     </div>
@@ -312,10 +314,11 @@ export function LoadingButton({
   loading,
   variant = 'primary',
   className,
+  disabled,
   ...rest
 }: ButtonHTMLAttributes<HTMLButtonElement> & { loading?: boolean; variant?: Variant }) {
   return (
-    <Button variant={variant} className={className} disabled={loading} {...rest}>
+    <Button variant={variant} className={className} disabled={Boolean(loading) || disabled} {...rest}>
       {loading ? (
         <>
           <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />

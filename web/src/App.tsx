@@ -7,6 +7,7 @@ import { Button, Card, Spinner } from './components/ui'
 import { Skyline } from './components/Skyline'
 import { api, type Session } from './lib/api'
 import { Dashboard } from './pages/Dashboard'
+import { Debrief } from './pages/Debrief'
 import { Desk } from './pages/Desk'
 import { Exams } from './pages/Exams'
 import { Focus } from './pages/Focus'
@@ -72,11 +73,12 @@ export default function App() {
     return () => window.removeEventListener('devi:unauthorized', onUnauthorized)
   }, [loadSession])
 
-  // global quick-jump hotkeys: d desk · f focus · l learn · q quizzes · x exams · r resources · p profile · h home
+  // global quick-jump hotkeys: d desk · f focus · l learn · q quizzes · x exams · r resources · p profile · e debrief · h home
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement)
         return
+      if (e.ctrlKey || e.metaKey || e.altKey) return
       const key = e.key.toLowerCase()
       const map: Record<string, string> = {
         d: '/desk',
@@ -86,6 +88,7 @@ export default function App() {
         x: '/exams',
         r: '/resources',
         p: '/profile',
+        e: '/debrief',
         h: '/',
       }
       const to = map[key]
@@ -116,6 +119,7 @@ export default function App() {
                 <Route path="learn" element={<Learn />} />
                 <Route path="focus" element={<Focus />} />
                 <Route path="quizzes" element={<Quizzes />} />
+                <Route path="debrief" element={<Debrief />} />
                 <Route path="desk" element={<Desk />} />
                 <Route path="labs" element={<Labs />} />
                 <Route path="exams" element={<Exams />} />

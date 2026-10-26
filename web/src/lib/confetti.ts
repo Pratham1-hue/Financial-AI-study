@@ -23,6 +23,7 @@ function ensure() {
   const c = canvas
   ctx = c.getContext('2d')
   resize()
+  window.addEventListener('resize', resize)
 }
 
 function resize() {

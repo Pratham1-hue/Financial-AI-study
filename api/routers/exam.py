@@ -1,8 +1,9 @@
 """Formal mastery exams and backup/export endpoints.
 
 Exams are proctored-feeling multi-module assessments (E1..E5) drawn from
-quiz_bank.EXAM_QUESTION_IDS. Answers are stripped client-side; grading happens
-server-side. Passing an exam records exam_scores and XP via lib.storage.
+quiz_bank.EXAM_QUESTION_IDS. Answer *keys* are stripped from the payload; the
+server grades the full question set, and anything unanswered counts as wrong.
+Passing an exam records exam_scores via lib.storage.
 """
 from __future__ import annotations
 
@@ -75,18 +76,20 @@ def exam_questions(eid: str):
 def submit_exam(eid: str, body: ExamSubmit):
     if eid not in EXAMS:
         raise HTTPException(status_code=404, detail="Unknown exam.")
-    qids = EXAM_QUESTION_IDS.get(eid, [])
-    ids = [qid for qid in body.answers if qid in Q_BY_ID]
-    if not ids:
-        raise HTTPException(status_code=400, detail="No answers submitted.")
+    # Grade against the exam's full question set. A partial submission is not a
+    # shortcut to 100%: unanswered questions are simply wrong.
+    qids = [qid for qid in EXAM_QUESTION_IDS.get(eid, []) if qid in Q_BY_ID]
+    if not qids:
+        raise HTTPException(status_code=400, detail="Exam has no questions.")
 
+    xp_before = deps.progress().get("xp", 0)
     score = 0
     review = []
     wrong_modules = []
-    for qid in ids:
+    for qid in qids:
         q = Q_BY_ID[qid]
-        chosen = body.answers[qid]
-        ok = chosen == q["ans"]
+        chosen = body.answers.get(qid)
+        ok = isinstance(chosen, int) and chosen == q["ans"]
         score += int(ok)
         if not ok:
             wrong_modules.append(q["module"])
@@ -96,12 +99,14 @@ def submit_exam(eid: str, body: ExamSubmit):
             "correct": q["opts"][q["ans"]], "ok": ok, "exp": q["exp"],
         })
 
-    total = len(ids)
-    pct = record_exam(deps.progress(), eid, score, total)
+    p = deps.progress()
+    pct = record_exam(p, eid, score, len(qids))
+    xp_gain = max(0, p.get("xp", 0) - xp_before)
 
     return {
-        "score": score, "total": total, "pct": pct, "passed": pct >= PASS_MARK,
-        "review": review, "weak_topics": wrong_modules, "xp": deps.progress().get("xp", 0),
+        "score": score, "total": len(qids), "pct": pct, "passed": pct >= PASS_MARK,
+        "review": review, "weak_topics": list(dict.fromkeys(wrong_modules)),
+        "xp": p.get("xp", 0), "xp_gain": xp_gain,
     }
 
 

@@ -32,20 +32,24 @@ def bank():
 class QuizSubmit(BaseModel):
     quiz_id: str = "quiz"
     answers: dict[str, int] = {}
+    qids: list[str] = []
 
 
 @router.post("/quiz/submit")
 def submit(body: QuizSubmit):
     p = deps.progress()
-    ids = [qid for qid in body.answers if qid in Q_BY_ID]
+    # Grade every question in the set the learner was shown. Sending only the
+    # answered ids used to grade 1/1 = 100%; unanswered questions are wrong.
+    requested = body.qids or list(body.answers.keys())
+    ids = list(dict.fromkeys(qid for qid in requested if qid in Q_BY_ID))
     if not ids:
-        raise HTTPException(status_code=400, detail="No answers submitted.")
+        raise HTTPException(status_code=400, detail="No questions to grade.")
 
     score, review, wrong = 0, [], []
     for qid in ids:
         q = Q_BY_ID[qid]
-        chosen = body.answers[qid]
-        ok = chosen == q["ans"]
+        chosen = body.answers.get(qid)
+        ok = isinstance(chosen, int) and chosen == q["ans"]
         score += int(ok)
         if not ok:
             wrong.append(q["module"])
@@ -53,7 +57,8 @@ def submit(body: QuizSubmit):
                        "you": q["opts"][chosen] if isinstance(chosen, int) and 0 <= chosen < len(q["opts"]) else None,
                        "correct": q["opts"][q["ans"]], "ok": ok, "exp": q["exp"]})
 
-    pct = record_quiz(p, body.quiz_id, score, len(ids))
+    quiz_id = (body.quiz_id or "quiz")[:80]
+    pct = record_quiz(p, quiz_id, score, len(ids))
     weak = [m for m, _ in Counter(wrong).most_common(3)]
     p["weak_topics"] = list(dict.fromkeys(p.get("weak_topics", []) + weak))
     deps.commit(p)

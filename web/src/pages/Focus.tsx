@@ -139,6 +139,15 @@ export function Focus() {
         }
       />
 
+      {error ? (
+        <div className="rounded-xl border border-[color-mix(in_srgb,var(--bad)_35%,transparent)] bg-bad-soft px-4 py-3 text-[0.88rem] font-medium text-bad">
+          {error}
+          <button onClick={() => setError(null)} className="ml-3 text-[0.75rem] underline opacity-70">
+            dismiss
+          </button>
+        </div>
+      ) : null}
+
       {banner ? (
         <div className="rounded-xl border border-[color-mix(in_srgb,var(--gold)_35%,transparent)] bg-gold-soft px-4 py-3 text-[0.88rem] font-medium text-gold">
           {banner}

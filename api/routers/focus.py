@@ -91,10 +91,16 @@ def get_focus():
 
 
 @router.post("/focus/start")
-def start(body: StartBody):
+def start(body: StartBody | None = None):
+    # Resume sends no body. Requiring one made pause -> resume return 422.
+    body = body or StartBody()
     s = focus.load_state()
-    if s["status"] in ("running", "paused"):
+    if s["status"] == "running":
         return {"state": _state_payload(s), "event": None, "already_active": True}
+    if s["status"] == "paused":
+        # Resume the paused block. Do not apply new settings mid-session.
+        focus.start(s)
+        return {"state": _state_payload(s), "event": None, "already_active": False}
     if body.mode in focus.MODES:
         s["mode"] = body.mode
     if body.custom:

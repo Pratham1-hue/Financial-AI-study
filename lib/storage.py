@@ -110,14 +110,25 @@ def is_task_done(progress, task_id):
 
 
 def record_quiz(progress, quiz_id, score, total):
-    pct = round(100 * score / max(total, 1))
-    prev = progress["quiz_scores"].get(quiz_id, {}).get("best", 0)
+    total = max(total, 1)
+    pct = round(100 * score / total)
+    rec = progress["quiz_scores"].get(quiz_id, {})
+    best_pct = rec.get("best", 0)
+    # Best raw score, not just the rounded percentage: paying the full current
+    # score on every small improvement let retakers out-earn one clean run.
+    prev_best = rec.get("best_score")
+    if prev_best is None:
+        prev_best = round(best_pct / 100 * total)  # legacy records
+    improvement = max(0, score - prev_best)
     progress["quiz_scores"][quiz_id] = {
         "last": pct,
-        "best": max(prev, pct),
-        "attempts": progress["quiz_scores"].get(quiz_id, {}).get("attempts", 0) + 1,
+        "best": max(best_pct, pct),
+        "best_score": max(prev_best, score),
+        "attempts": rec.get("attempts", 0) + 1,
     }
-    progress["xp"] += score * 5
+    # XP rewards progress, not repetition: each newly correct answer pays once.
+    if improvement:
+        progress["xp"] += improvement * 5
     _bump(progress, "quiz")
     if pct >= 80:
         _bump(progress, "quiz80")
@@ -126,12 +137,24 @@ def record_quiz(progress, quiz_id, score, total):
 
 
 def record_exam(progress, exam_id, score, total):
-    pct = round(100 * score / max(total, 1))
+    total = max(total, 1)
+    pct = round(100 * score / total)
+    rec = progress["exam_scores"].get(exam_id, {})
+    prev_pct = rec.get("score", 0)
+    prev_best = rec.get("best_score")
+    if prev_best is None:
+        prev_best = round(prev_pct / 100 * total)  # legacy records
+    improvement = max(0, score - prev_best)
+    # Keep the personal best: a retake must never lower a mastered score.
     progress["exam_scores"][exam_id] = {
-        "score": pct,
+        "score": max(prev_pct, pct),
+        "last": pct,
+        "best_score": max(prev_best, score),
         "at": datetime.now().isoformat(),
     }
-    progress["xp"] += score * 10
+    # Retakes are for mastery, not farming: only newly correct answers pay.
+    if improvement:
+        progress["xp"] += improvement * 10
     _bump(progress, "exam")
     save_progress(progress)
     return pct

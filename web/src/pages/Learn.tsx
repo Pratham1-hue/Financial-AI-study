@@ -46,12 +46,22 @@ export function Learn() {
   }, [mid, modules])
 
   useEffect(() => {
-    if (!mid) return
+    if (!mid) {
+      setDetail(null)
+      setLoadingDetail(false)
+      return
+    }
     let alive = true
     setLoadingDetail(true)
+    setError(null)
+    setDetail(null)
     api
       .get<ModuleDetail>(`/api/modules/${mid}`)
-      .then((d) => alive && setDetail(d))
+      .then((d) => {
+        if (!alive) return
+        setDetail(d)
+        setError(null)
+      })
       .catch((e) => alive && setError((e as Error).message))
       .finally(() => alive && setLoadingDetail(false))
     return () => {
@@ -59,11 +69,19 @@ export function Learn() {
     }
   }, [mid])
 
+  // A deep link can point at a module outside the track currently selected.
+  useEffect(() => {
+    if (!mid || !allModules) return
+    const match = allModules.find((m) => m.id === mid)
+    if (match && match.track !== track) setTrack(match.track)
+  }, [mid, allModules, track])
+
   async function markWatched(videoId: string) {
     if (!detail) return
     try {
       await api.post(`/api/modules/${detail.id}/watch`, { video_id: videoId })
       setDetail(await api.get<ModuleDetail>(`/api/modules/${detail.id}`))
+      setError(null)
       void reloadList(true)
     } catch (e) {
       setError((e as Error).message)

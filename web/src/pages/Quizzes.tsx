@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { QuoteLine } from '../components/Quote'
+import { fireConfetti } from '../lib/confetti'
 import { Badge, Bar, Button, Card, Empty, PageHeader, SectionTitle, Spinner, Tabs, cx, inputCls } from '../components/ui'
 import { api, type Question } from '../lib/api'
 import { useApi } from '../lib/hooks'
@@ -65,7 +66,8 @@ function Practice({ initialModule }: { initialModule: string | null }) {
     setError(null)
     try {
       const res = await api.post<typeof result>('/api/quiz/submit', {
-        quiz_id: `practice-${mod}-${Date.now()}`,
+        quiz_id: `practice-${track}-${mod}-${diff}`,
+        qids: run.map((q) => q.id),
         answers,
       })
       setResult(res)
@@ -419,7 +421,7 @@ interface GateDetail {
 }
 
 function Gates({ initialModule }: { initialModule: string | null }) {
-  const { data: gates, loading } = useApi<{ id: string; title: string; track: string; status: string; missing_prereqs: string[]; mcq: number; attempts: number }[]>('/api/gates')
+  const { data: gates, loading, reload } = useApi<{ id: string; title: string; track: string; status: string; missing_prereqs: string[]; mcq: number; attempts: number }[]>('/api/gates')
   const [mid, setMid] = useState<string | null>(initialModule)
   const [detail, setDetail] = useState<GateDetail | null>(null)
   const [answers, setAnswers] = useState<Record<string, number>>({})
@@ -465,6 +467,10 @@ function Gates({ initialModule }: { initialModule: string | null }) {
         texts,
       })
       setResult(res)
+      if (res?.passed) {
+        void fireConfetti(window.innerWidth / 2, window.innerHeight / 3, 140)
+      }
+      void reload(true)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (e) {
       setError((e as Error).message)
@@ -648,8 +654,16 @@ function Gates({ initialModule }: { initialModule: string | null }) {
 /* ---------------------------------------------------------------------- page */
 export function Quizzes() {
   const [params, setParams] = useSearchParams()
-  const tab = (params.get('tab') as Tab) ?? 'practice'
+  const raw = params.get('tab')
+  const tab: Tab = raw === 'drill' || raw === 'gates' ? raw : 'practice'
   const moduleParam = params.get('module')
+
+  function changeTab(id: Tab) {
+    const next = new URLSearchParams(params)
+    if (id === 'practice') next.delete('tab')
+    else next.set('tab', id)
+    setParams(next, { replace: true })
+  }
 
   return (
     <div className="space-y-6">
@@ -666,7 +680,7 @@ export function Quizzes() {
           { id: 'gates', label: 'Mastery gates' },
         ]}
         value={tab}
-        onChange={(id) => setParams(id === 'practice' ? {} : { tab: id }, { replace: true })}
+        onChange={changeTab}
       />
 
       {tab === 'practice' ? <Practice initialModule={moduleParam} /> : null}

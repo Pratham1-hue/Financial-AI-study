@@ -37,5 +37,12 @@ export const toast = {
   warn: (title: string, description?: string, duration?: number) => push({ title, description, tone: 'warn', duration }),
   gold: (title: string, description?: string, duration?: number) => push({ title, description, tone: 'gold', duration }),
   info: (title: string, description?: string, duration?: number) => push({ title, description, tone: 'info', duration }),
-  dismiss: (id?: number) => (id === undefined ? (toasts = []) : remove(id)),
+  dismiss: (id?: number) => {
+    if (id === undefined) {
+      toasts = []
+      listeners.forEach((fn) => fn(toasts))
+    } else {
+      remove(id)
+    }
+  },
 }

@@ -236,6 +236,7 @@ interface CreditMetrics {
   features: string[]
   model: string
   threshold: number
+  xp_gain?: number
 }
 
 function CreditLab({ features, models, usableAuc }: { features: string[]; models: string[]; usableAuc: number }) {
@@ -245,7 +246,7 @@ function CreditLab({ features, models, usableAuc }: { features: string[]; models
   const [metrics, setMetrics] = useState<CreditMetrics | null>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [banked, setBanked] = useState(false)
+  const [banked, setBanked] = useState<number | null>(null)
 
   async function train(bank = false) {
     setBusy(true)
@@ -257,7 +258,8 @@ function CreditLab({ features, models, usableAuc }: { features: string[]; models
         threshold,
       })
       setMetrics(res)
-      if (bank) setBanked(true)
+      if (bank) setBanked(res.xp_gain ?? 0)
+      else setBanked(null)
     } catch (e) {
       setError((e as Error).message)
     } finally {
@@ -309,11 +311,17 @@ function CreditLab({ features, models, usableAuc }: { features: string[]; models
               <Button variant="primary" size="lg" className="flex-1" disabled={busy || picked.length === 0} onClick={() => void train(false)}>
                 {busy ? 'Training…' : 'Train'}
               </Button>
-              <Button size="lg" disabled={busy || !metrics || banked} onClick={() => void train(true)}>
-                Bank +15
+              <Button size="lg" disabled={busy || !metrics} onClick={() => void train(true)}>
+                Bank result
               </Button>
             </div>
-            {banked ? <div className="text-[0.78rem] text-ok">Banked. An AUC above {usableAuc.toFixed(2)} is desk-usable.</div> : null}
+            {banked !== null ? (
+              <div className="text-[0.78rem] text-ok">
+                {banked > 0
+                  ? `+${banked} XP banked. An AUC above ${usableAuc.toFixed(2)} is desk-usable.`
+                  : `Recorded. This model already paid out its XP - retraining is practice.`}
+              </div>
+            ) : null}
           </div>
         </Card>
         <Card>
@@ -427,6 +435,7 @@ interface ValResult {
   checks: { label: string; you: number; answer: number; ok: boolean }[]
   workings: { fcfs: number[]; pv: number; tv: number; pv_tv: number; ev: number; equity: number; per_share: number }
   case: ValCase
+  xp_gain?: number
 }
 
 function ValuationLab() {
@@ -550,7 +559,13 @@ function ValuationLab() {
               <h3 className="font-display text-[1.3rem] font-bold text-ink">
                 {result.passed} / {result.of} correct
               </h3>
-              {result.correct ? <Badge tone="ok">+15 XP · clean sheet</Badge> : <Badge tone="warn">keep going</Badge>}
+              {result.correct ? (
+                <Badge tone="ok">
+                  {result.xp_gain ? `+${result.xp_gain} XP · clean sheet` : 'Clean sheet · practice'}
+                </Badge>
+              ) : (
+                <Badge tone="warn">keep going</Badge>
+              )}
             </div>
             <div className="mt-4 space-y-2">
               {result.checks.map((c2) => (

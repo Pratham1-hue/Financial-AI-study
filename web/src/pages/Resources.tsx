@@ -13,7 +13,7 @@ type Filter = {
 }
 
 export function Resources() {
-  const { data, loading, error } = useApi<{ total: number; items: Resource[] }>('/api/resources')
+  const { data, loading, error } = useApi<{ total: number; items: Resource[] }>('/api/resources?limit=1000')
   const [filter, setFilter] = useState<Filter>({ q: '', track: 'all', cat: 'all', type: 'all' })
   const [view, setView] = useState<'list' | 'grid'>('list')
 

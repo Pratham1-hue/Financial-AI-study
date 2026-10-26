@@ -89,15 +89,18 @@ export function Desk() {
     if (!rid) return
     setBusy(true)
     try {
-      setResult(await api.post<DeskGrade>(`/api/desk/${rid}/grade`))
+      const res = await api.post<DeskGrade>(`/api/desk/${rid}/grade`)
+      setResult(res)
+      setMessage(null)
+      void reloadHistory()
     } catch (e) {
-      setError((e as Error).message)
+      setMessage({ text: (e as Error).message, ok: false })
     } finally {
       setBusy(false)
     }
   }
 
-  const { data: history } = useApiHistory()
+  const { data: history, reload: reloadHistory } = useApiHistory()
 
   if (error && !round) return <Empty>{error}</Empty>
   if (!round) return <Spinner label="Opening the desk" />
@@ -417,11 +420,14 @@ export function Desk() {
 
 function useApiHistory() {
   const [data, setData] = useState<{ rounds: HistoryRow[]; total: number } | null>(null)
-  useEffect(() => {
+  const load = useCallback(() => {
     api
       .get<{ rounds: HistoryRow[]; total: number }>('/api/desk-history')
       .then(setData)
       .catch(() => undefined)
   }, [])
-  return { data }
+  useEffect(() => {
+    load()
+  }, [load])
+  return { data, reload: load }
 }

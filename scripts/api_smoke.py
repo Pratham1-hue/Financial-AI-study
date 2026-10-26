@@ -35,11 +35,16 @@ show("focus", f"{f['state']['status']} {f['state']['mode']} rem={f['state']['rem
 s = c.post("/api/focus/start", json={"mode": "Pomodoro", "subject": "Python & SQL", "label": "smoke"}).json()
 show("start", f"{s['state']['status']} rem={s['state']['remaining']} label={s['state']['label']}")
 show("pause", c.post("/api/focus/pause").json()["state"]["status"])
+# Resume sends no body on purpose: this used to 422.
+show("resume", c.post("/api/focus/start").json()["state"]["status"])
+show("skip", c.post("/api/focus/skip").json()["state"]["phase"])
 show("reset", c.post("/api/focus/reset").json()["state"]["status"])
 
 bank = c.get("/api/quiz/bank").json()
 show("bank", f"{len(bank['questions'])} questions, leaks ans? {'ans' in bank['questions'][0]}")
-sub = c.post("/api/quiz/submit", json={"quiz_id": "smoke", "answers": {"f1_1": 0, "f1_2": 2}}).json()
+qids = [q["id"] for q in bank["questions"][:10]]
+sub = c.post("/api/quiz/submit",
+             json={"quiz_id": "smoke", "qids": qids, "answers": {"f1_1": 0, "f1_2": 2}}).json()
 show("submit", f"{sub['score']}/{sub['total']} = {sub['pct']}% review={len(sub['review'])}")
 
 dr = c.get("/api/drill").json()
@@ -56,7 +61,8 @@ r = c.post("/api/desk/new", json={"seed": 42}).json()
 show("desk new", f"{r['round_id']} tick={r['tick']} quotes={list(r['quotes'])} cash={r['cash']}")
 t = c.post(f"/api/desk/{r['round_id']}/trade", json={"sym": "NVX", "qty": 100}).json()
 show("trade", f"ok={t['ok']} {t['message']} equity={t['equity']} gross={t['gross']}")
-show("book", f"bids={len(t.get('book', {}).get('bids', []))} asks={len(t.get('book', {}).get('asks', []))}")
+bk = c.get(f"/api/desk/{r['round_id']}?sym=NVX").json()
+show("book", f"bids={len(bk.get('book', {}).get('bids', []))} asks={len(bk.get('book', {}).get('asks', []))}")
 
 lm = c.get("/api/labs").json()
 show("labs", f"sql={len(lm['sql'])} credit_feats={len(lm['credit']['features'])}")
@@ -67,4 +73,18 @@ bad = c.post("/api/labs/sql/check", json={"task_id": "sql1", "sql": "SELECT * FR
 show("sql1 wrong", f"correct={bad['ok']} err={(bad.get('error') or '')[:60]}")
 val = c.post("/api/labs/valuation", json={}).json()
 show("valuation case", f"seed={val['case']['seed']} wacc={round(val['case']['wacc'], 3)}")
+
+# --- integrity + new surfaces
+eq = c.get("/api/exams/E1").json()["questions"]
+one = c.post("/api/exams/E1/submit", json={"answers": {eq[0]["id"]: 0}}).json()
+show("exam partial", f"{one['score']}/{one['total']} = {one['pct']}% (full set graded)")
+show("resources", c.get("/api/resources?limit=1000").json()["total"])
+na = c.get("/api/does-not-exist")
+show("api 404", f"{na.status_code} {na.headers.get('content-type')}")
+show("debrief short", c.post("/api/debrief", json={"concept": "x", "explain": "too short", "first": "y"}).status_code)
+db = c.post("/api/debrief", json={"concept": "Duration", "explain": "d" * 220,
+                                 "gaps": "sign", "win": "shipped", "first": "9am", "energy": 4}).json()
+show("debrief", f"is_new={db['is_new']} +{db['xp_gain']} xp={db['xp']}")
+show("backup inspect", c.get("/api/backup/inspect").json())
+
 print("\nSMOKE OK")

@@ -14,12 +14,16 @@ from lib.storage import log_activity
 router = APIRouter()
 
 
-def _record(p, lab, ok, detail=""):
-    p.setdefault("lab_runs", []).append({
+def _record(p, lab, ok, detail="", xp=0):
+    runs = p.setdefault("lab_runs", [])
+    runs.append({
         "date": date.today().isoformat(), "lab": lab, "ok": bool(ok), "detail": detail,
     })
-    if ok:
-        p["xp"] = p.get("xp", 0) + 15
+    # Keep the log bounded; this file is rewritten on every save.
+    if len(runs) > 300:
+        del runs[:-300]
+    if ok and xp:
+        p["xp"] = p.get("xp", 0) + xp
         log_activity(p, "lab")
     deps.commit(p)
 
@@ -27,6 +31,10 @@ def _record(p, lab, ok, detail=""):
 def _already_solved(p, lab, detail):
     return any(r.get("lab") == lab and r.get("detail") == detail and r.get("ok")
                for r in p.get("lab_runs", []))
+
+
+def _solved_before(p, lab):
+    return any(r.get("lab") == lab and r.get("ok") for r in p.get("lab_runs", []))
 
 
 @router.get("/labs")
@@ -62,11 +70,9 @@ def sql_check(body: SqlBody):
     result = engine.check_sql(body.task_id, body.sql, body.attempt)
     p = deps.progress()
     if result.get("ok"):
-        if not _already_solved(p, "SQL", body.task_id):
-            _record(p, "SQL", True, body.task_id)
-            result["recorded"] = True
-        else:
-            result["recorded"] = False
+        first = not _already_solved(p, "SQL", body.task_id)
+        _record(p, "SQL", True, body.task_id, xp=15 if first else 0)
+        result["recorded"] = first
     elif result.get("error"):
         _record(p, "SQL", False, body.task_id)
     return result
@@ -89,7 +95,11 @@ def credit_bank(body: CreditBody):
     if "error" in result:
         raise HTTPException(status_code=400, detail=result["error"])
     p = deps.progress()
-    _record(p, "Credit ML", result["usable"], f"{body.model} auc={result['auc']:.3f}")
+    # One payout per model, so re-training the same model cannot farm XP.
+    first = not _already_solved(p, "Credit ML", body.model)
+    xp_gain = 15 if result["usable"] and first else 0
+    _record(p, "Credit ML", result["usable"], body.model, xp=xp_gain)
+    result["xp_gain"] = xp_gain
     return result
 
 
@@ -107,7 +117,11 @@ def valuation(body: ValuationBody):
         return {"case": engine.public_case(seed)}
     result = engine.grade_valuation(seed, body.ev, body.equity, body.per_share)
     p = deps.progress()
-    _record(p, "Valuation", result["correct"], f"seed={seed}" if result["correct"] else f"{result['passed']}/3")
+    # One valuation payout ever; extra cases are practice, not income.
+    first = not _solved_before(p, "Valuation")
+    xp_gain = 15 if result["correct"] and first else 0
+    _record(p, "Valuation", result["correct"], f"seed={seed}", xp=xp_gain)
+    result["xp_gain"] = xp_gain
     result["case"] = engine.public_case(seed)
     return result
 

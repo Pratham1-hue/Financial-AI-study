@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { fireConfetti } from '../lib/confetti'
-import { LoadingButton, Card, Field, PageHeader, SectionTitle, Spinner, cx, inputCls } from '../components/ui'
+import { LoadingButton, Card, Empty, Field, PageHeader, SectionTitle, Spinner, cx, inputCls } from '../components/ui'
 import { api } from '../lib/api'
 import { fmtMoney } from '../lib/format'
 import { useApi } from '../lib/hooks'
@@ -9,32 +9,54 @@ import { useToast } from '../components/Toast'
 
 export function Profile() {
   const { ok, bad, gold } = useToast()
-  const { data: profile } = useApi<{ name: string; target_role: string; target_date: string; daily_hours: number; level: string; why: string; dream_companies: string; day_start: number }>('/api/profile')
+  const { data: profile, error: profileError } = useApi<{ name: string; target_role: string; target_date: string; daily_hours: number; level: string; why: string; dream_companies: string; day_start: number }>('/api/profile')
   const { data: backupPreview, loading: backupLoading } = useApi<{
-    xp: number; tasks: number; modules_done: number; watched: number; has_profile: boolean; has_focus: boolean; desk_rounds: number; lab_runs: number;
+    xp: number; tasks: number; modules_done: number; modules_total: number; watched: number; has_profile: boolean; has_focus: boolean; desk_rounds: number; lab_runs: number; labs_solved: number;
   }>('/api/backup/inspect')
   const [exporting, setExporting] = useState(false)
   const [importing, setImporting] = useState(false)
+  const [saving, setSaving] = useState(false)
   const [file, setFile] = useState<File | null>(null)
 
   const [form, setForm] = useState({
-    name: profile?.name ?? '',
-    target_role: profile?.target_role ?? '',
-    daily_hours: String(profile?.daily_hours ?? 6),
-    day_start: String(profile?.day_start ?? 9),
+    name: '',
+    target_role: '',
+    daily_hours: '6',
+    day_start: '9',
+    why: '',
+    dream_companies: '',
   })
 
+  // The profile arrives after the first render. Copy it into the form once it
+  // does, instead of freezing the blank initial state forever.
+  useEffect(() => {
+    if (!profile) return
+    setForm({
+      name: profile.name ?? '',
+      target_role: profile.target_role ?? '',
+      daily_hours: String(profile.daily_hours ?? 6),
+      day_start: String(profile.day_start ?? 9),
+      why: profile.why ?? '',
+      dream_companies: profile.dream_companies ?? '',
+    })
+  }, [profile])
+
   async function saveProfile() {
+    setSaving(true)
     try {
       await api.put('/api/profile', {
-        name: form.name || undefined,
-        target_role: form.target_role || undefined,
-        daily_hours: parseInt(form.daily_hours, 10) || 6,
-        day_start: parseInt(form.day_start, 10) || 9,
+        name: form.name.trim() || undefined,
+        target_role: form.target_role.trim() || undefined,
+        daily_hours: Math.min(16, Math.max(1, parseInt(form.daily_hours, 10) || 6)),
+        day_start: Math.min(12, Math.max(6, parseInt(form.day_start, 10) || 9)),
+        why: form.why.trim() || undefined,
+        dream_companies: form.dream_companies.trim() || undefined,
       })
-      ok('Profile saved.')
+      ok('Profile saved.', 'Your plan recalculates from these targets.')
     } catch (e) {
       bad('Save failed.', (e as Error).message)
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -51,7 +73,7 @@ export function Profile() {
       a.click()
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
-      gold('Backup downloaded.', 'Keep this file safe — it is your only restore point on Render&rsquo;s free tier.')
+      gold('Backup downloaded.', 'Keep this file safe — it is your only restore point on Render’s free tier.')
     } catch (e) {
       bad('Export failed.', (e as Error).message)
     } finally {
@@ -78,6 +100,7 @@ export function Profile() {
     }
   }
 
+  if (profileError) return <Empty>{profileError}</Empty>
   if (!profile || backupLoading) return <Spinner label="Loading your profile" />
 
   return (
@@ -105,16 +128,26 @@ export function Profile() {
             <input className={inputCls} type="number" min={6} max={12} value={form.day_start} onChange={(e) => setForm({ ...form, day_start: e.target.value })} />
           </Field>
           <Field label="Why">
-            <textarea className={cx(inputCls, 'min-h-[90px] resize-y')} value={profile.why} readOnly />
-            <span className="mt-1 text-[0.72rem] text-muted">Set during onboarding; edit in the Streamlit app if needed.</span>
+            <textarea
+              className={cx(inputCls, 'min-h-[90px] resize-y')}
+              value={form.why}
+              onChange={(e) => setForm({ ...form, why: e.target.value })}
+              placeholder="The reason you will not quit."
+            />
+            <span className="mt-1 block text-[0.72rem] text-muted">Shown on the dashboard when the day gets hard.</span>
           </Field>
           <Field label="Dream companies">
-            <textarea className={cx(inputCls, 'min-h-[70px] resize-y')} value={profile.dream_companies} readOnly />
-            <span className="mt-1 text-[0.72rem] text-muted">Used for the NYC dream board.</span>
+            <textarea
+              className={cx(inputCls, 'min-h-[70px] resize-y')}
+              value={form.dream_companies}
+              onChange={(e) => setForm({ ...form, dream_companies: e.target.value })}
+              placeholder="Jane Street, Two Sigma, Citadel…"
+            />
+            <span className="mt-1 block text-[0.72rem] text-muted">Comma-separated. Used for the NYC dream board.</span>
           </Field>
           <div className="col-span-3 pt-3">
-            <LoadingButton variant="primary" loading={false} onClick={() => void saveProfile()}>
-              Save changes
+            <LoadingButton variant="primary" loading={saving} onClick={() => void saveProfile()}>
+              {saving ? 'Saving…' : 'Save changes'}
             </LoadingButton>
           </div>
         </div>
@@ -126,10 +159,10 @@ export function Profile() {
         <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {[
             ['XP', fmtMoney(backupPreview?.xp ?? 0), 'lifetime'],
-            ['Modules done', String(backupPreview?.modules_done ?? 0), 'of 18'],
+            ['Modules mastered', String(backupPreview?.modules_done ?? 0), `of ${backupPreview?.modules_total ?? 18}`],
             ['Videos watched', String(backupPreview?.watched ?? 0), 'lessons'],
             ['Desk rounds', String(backupPreview?.desk_rounds ?? 0), 'graded'],
-            ['Labs solved', String(backupPreview?.lab_runs ?? 0), 'auto-graded'],
+            ['Labs solved', String(backupPreview?.labs_solved ?? 0), `${backupPreview?.lab_runs ?? 0} attempts`],
           ].map(([label, value, sub]) => (
             <Card key={label} className="p-4 text-center">
               <div className="mono text-[1.5rem] font-bold text-ink">{value}</div>

@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from api.routers import core, desk, exam, focus as focus_router, labs, learn, quiz, backup
+from api.routers import core, debrief, desk, exam, focus as focus_router, labs, learn, quiz, backup
 from api.security import COOKIE, verify_token
 
 app = FastAPI(title="Project DEVI", version="2.0.0")
@@ -46,7 +46,8 @@ def legacy_health():
     return {"status": "ok"}
 
 
-for r in (core.router, learn.router, focus_router.router, quiz.router, desk.router, labs.router, exam.router, backup.router):
+for r in (core.router, learn.router, focus_router.router, quiz.router, desk.router,
+          labs.router, exam.router, debrief.router, backup.router):
     app.include_router(r, prefix="/api")
 
 DIST = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "web", "dist")
@@ -56,6 +57,10 @@ if os.path.isdir(DIST):
 
     @app.get("/{full_path:path}")
     def spa(full_path: str):
+        # Unknown /api/* paths are API errors, not the SPA shell. Without this
+        # the catch-all answered 200 text/html and the client tried to parse it.
+        if full_path == "api" or full_path.startswith("api/"):
+            return JSONResponse({"detail": "Not found."}, status_code=404)
         candidate = os.path.join(DIST, full_path)
         if full_path and os.path.isfile(candidate):
             return FileResponse(candidate)

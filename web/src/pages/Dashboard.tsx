@@ -46,13 +46,13 @@ export function Dashboard() {
   const streak = metrics.streak
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-24">
       <Confetti fire={streakFire} />
 
       {/* hero */}
       <Card className="hero fade-up relative overflow-hidden p-0" padded={false}>
-        <div className="relative grid gap-6 p-7 md:grid-cols-[1fr_auto] md:items-center">
-          <div className="relative z-10">
+        <div className="relative grid gap-8 p-7 md:grid-cols-[1fr_340px] md:items-start">
+          <div className="relative z-10 min-w-0 max-w-2xl">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-[0.68rem] font-semibold tracking-[0.26em] text-gold uppercase">
                 Day {plan.day} of {plan.days_total} · {profile.target_role || 'the mission'}
@@ -71,6 +71,9 @@ export function Dashboard() {
               </p>
             ) : null}
             <div className="mt-5 flex flex-wrap gap-2.5">
+              <p className="w-full text-[0.68rem] font-semibold tracking-[0.2em] text-gold uppercase mb-2">
+                Start your day →
+              </p>
               <Link to="/focus?start=1">
                 <Button variant="primary" size="lg">
                   Start locked session
@@ -88,8 +91,8 @@ export function Dashboard() {
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-6">
-            <ProgressRing pct={goalPct * 100} size={132} stroke={11} label={fmtHM(metrics.focus_min_today).replace(' ', '')} sub="focus goal" />
+          <div className="flex flex-col items-center gap-6 min-w-0 max-w-[340px]">
+            <ProgressRing pct={goalPct * 100} size={124} stroke={11} label={fmtHM(metrics.focus_min_today).replace(' ', '')} sub="focus goal" />
             <DayScoreRing pct={metrics.day_score} value={metrics.day_score} />
           </div>
         </div>

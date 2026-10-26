@@ -6,6 +6,8 @@ data/yt_quota.json
 data/progress.json
 data/profile.json
 data/focus.json
+# timestamped copies written by scripts/reset_progress.py
+data/*.bak
 .venv/
 __pycache__/
 *.pyc

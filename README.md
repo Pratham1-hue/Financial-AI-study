@@ -98,6 +98,19 @@ Resources live in `lib/resources.py` (core set) plus `lib/res_finance.py`, `lib/
 and `lib/res_career.py` (batch 2). Duplicate URLs are merged automatically, so adding a
 resource that already exists costs nothing. After adding links, re-run the checker.
 
+## Resetting progress
+
+```bash
+.venv\Scripts\python.exe scripts\reset_progress.py --dry-run   # show what would be wiped
+.venv\Scripts\python.exe scripts\reset_progress.py --yes       # back to day 1, 0 XP
+.venv\Scripts\python.exe scripts\reset_progress.py --yes --all # also reset the profile
+```
+
+Before writing anything it copies each file to `<name>.<timestamp>.bak` next to the
+original, and it honours `LAKSH_DATA_DIR`, so it also works against a mounted volume.
+Personal state is gitignored by design, which is why a reset never appears as a git
+change.
+
 ## Run
 
 **React UI (primary)** — two terminals:

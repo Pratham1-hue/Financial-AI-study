@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { QuoteLine } from '../components/Quote'
+import { StaggerGroup } from '../components/motion'
 import { Badge, Bar, Button, Card, Empty, PageHeader, SectionTitle, Spinner, Tabs, cx, inputCls } from '../components/ui'
 import { api } from '../lib/api'
 import { fmtMoney, fmtPct } from '../lib/format'
@@ -567,7 +568,7 @@ function ValuationLab() {
                 <Badge tone="warn">keep going</Badge>
               )}
             </div>
-            <div className="mt-4 space-y-2">
+            <StaggerGroup className="mt-4 space-y-2">
               {result.checks.map((c2) => (
                 <div key={c2.label} className={cx('rounded-xl border px-3.5 py-2.5', c2.ok ? 'border-[color-mix(in_srgb,var(--ok)_35%,transparent)] bg-ok-soft' : 'border-[color-mix(in_srgb,var(--bad)_35%,transparent)] bg-bad-soft')}>
                   <div className="flex items-center justify-between text-[0.86rem]">
@@ -578,7 +579,7 @@ function ValuationLab() {
                   </div>
                 </div>
               ))}
-            </div>
+            </StaggerGroup>
 
             <div className="mt-5">
               <div className="mb-2 text-[0.68rem] font-semibold tracking-[0.16em] text-muted uppercase">Workings</div>

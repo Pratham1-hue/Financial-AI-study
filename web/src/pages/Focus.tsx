@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 
 import { TimerRing } from '../components/TimerRing'
 import { QuoteLine } from '../components/Quote'
+import { StaggerGroup } from '../components/motion'
 import { Badge, Bar, Button, Card, Empty, Field, PageHeader, SectionTitle, Spinner, cx, inputCls } from '../components/ui'
 import { api, type FocusPayload } from '../lib/api'
 import { fmtClock, fmtHM } from '../lib/format'
@@ -149,7 +150,7 @@ export function Focus() {
       ) : null}
 
       {banner ? (
-        <div className="rounded-xl border border-[color-mix(in_srgb,var(--gold)_35%,transparent)] bg-gold-soft px-4 py-3 text-[0.88rem] font-medium text-gold">
+        <div key={banner} className="slide-up rounded-xl border border-[color-mix(in_srgb,var(--gold)_35%,transparent)] bg-gold-soft px-4 py-3 text-[0.88rem] font-medium text-gold">
           {banner}
           <button onClick={() => setBanner(null)} className="ml-3 text-[0.75rem] underline opacity-70">
             dismiss
@@ -159,14 +160,16 @@ export function Focus() {
 
       <div className="grid gap-5 lg:grid-cols-[auto_1fr]">
         <Card className="flex flex-col items-center gap-6 py-8">
-          <TimerRing
-            remaining={displayRemaining}
-            total={state.total || 1}
-            color={phaseColor}
-            clock={fmtClock(displayRemaining)}
-            label={statusLabel}
-            sub={state.label || state.subject}
-          />
+          <div className={cx('relative rounded-full', running && 'animate-pulse-ring')}>
+            <TimerRing
+              remaining={displayRemaining}
+              total={state.total || 1}
+              color={phaseColor}
+              clock={fmtClock(displayRemaining)}
+              label={statusLabel}
+              sub={state.label || state.subject}
+            />
+          </div>
 
           <div className="flex flex-wrap items-center justify-center gap-2.5">
             {state.status === 'idle'
@@ -189,7 +192,7 @@ export function Focus() {
         <div className="space-y-5">
           <Card>
             <SectionTitle hint={`goal ${fmtHM(goal_min)} / day`}>Today</SectionTitle>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <StaggerGroup className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               {[
                 ['Locked today', fmtHM(stats.today_min)],
                 ['Sessions', String(stats.sessions_today)],
@@ -201,7 +204,7 @@ export function Focus() {
                   <div className="mono mt-1 text-[1.15rem] font-bold text-ink">{v}</div>
                 </div>
               ))}
-            </div>
+            </StaggerGroup>
             <div className="mt-5">
               <Bar
                 value={stats.today_min}
@@ -219,7 +222,7 @@ export function Focus() {
               <span className="text-[0.82rem] text-muted">{rank.current[2]}</span>
             </div>
             <Bar value={rank.pct * 100} max={100} />
-            <div className="mt-4 grid gap-1.5">
+            <StaggerGroup className="mt-4 grid gap-1.5">
               {rank.ladder.map(([hours, title]) => (
                 <div
                   key={`${hours}-${title}`}
@@ -232,7 +235,7 @@ export function Focus() {
                   <span className="mono">{hours}h</span>
                 </div>
               ))}
-            </div>
+            </StaggerGroup>
           </Card>
         </div>
       </div>
@@ -323,7 +326,7 @@ export function Focus() {
                 </thead>
                 <tbody>
                   {log.map((row, i) => (
-                    <tr key={row.id ?? i} className="border-t border-line">
+                    <tr key={row.id ?? i} className="fade-up border-t border-line" style={{ animationDelay: `${Math.min(i, 8) * 60}ms` }}>
                       <td className="mono px-3 py-2 text-muted">{row.ended_at?.slice(5, 16) ?? row.date}</td>
                       <td className="mono px-3 py-2 font-semibold text-ink">{row.minutes}m</td>
                       <td className="px-3 py-2 text-ink-soft">{row.subject}</td>

@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 
 import { QuoteLine } from '../components/Quote'
 import { fireConfetti } from '../lib/confetti'
+import { StaggerGroup } from '../components/motion'
 import { Badge, Bar, Button, Card, Empty, PageHeader, SectionTitle, Spinner, Tabs, cx, inputCls } from '../components/ui'
 import { api, type Question } from '../lib/api'
 import { useApi } from '../lib/hooks'
@@ -185,7 +186,7 @@ function Practice({ initialModule }: { initialModule: string | null }) {
         ) : null}
 
         {run ? (
-          <div className="space-y-4">
+          <StaggerGroup className="space-y-4">
             {run.map((q, i) => {
               const rv = result?.review.find((r) => r.id === q.id)
               return (
@@ -208,13 +209,13 @@ function Practice({ initialModule }: { initialModule: string | null }) {
                           disabled={!!result}
                           onClick={() => setAnswers((a) => ({ ...a, [q.id]: oi }))}
                           className={cx(
-                            'flex w-full items-start gap-3 rounded-xl border px-3.5 py-2.5 text-left text-[0.88rem] transition disabled:cursor-default',
+                            'press flex w-full items-start gap-3 rounded-xl border px-3.5 py-2.5 text-left text-[0.88rem] transition disabled:cursor-default',
                             showCorrect
-                              ? 'border-[color-mix(in_srgb,var(--ok)_45%,transparent)] bg-ok-soft text-ok'
+                              ? 'animate-correct border-[color-mix(in_srgb,var(--ok)_45%,transparent)] bg-ok-soft text-ok'
                               : showWrong
-                                ? 'border-[color-mix(in_srgb,var(--bad)_45%,transparent)] bg-bad-soft text-bad'
+                                ? 'animate-wrong border-[color-mix(in_srgb,var(--bad)_45%,transparent)] bg-bad-soft text-bad'
                                 : chosen
-                                  ? 'border-gold bg-gold-soft text-ink'
+                                  ? 'animate-answer-pop border-gold bg-gold-soft text-ink'
                                   : 'border-line bg-surface-2 text-ink-soft hover:border-line-strong',
                           )}
                         >
@@ -245,7 +246,7 @@ function Practice({ initialModule }: { initialModule: string | null }) {
                 </Button>
               </div>
             ) : null}
-          </div>
+          </StaggerGroup>
         ) : (
           <Empty>Pick a filter and start a set. Ten questions, no notes, no pausing.</Empty>
         )}
@@ -321,7 +322,7 @@ function Drill() {
             </p>
           </Card>
         ) : (
-          <Card className="fade-up">
+          <Card key={card.q} className="fade-up">
             <div className="mb-3 flex items-center gap-2">
               <span className="mono text-[0.72rem] font-bold text-gold">card {(done + 1).toString().padStart(2, '0')}</span>
               <Badge tone="neutral">{card.module}</Badge>
@@ -339,8 +340,8 @@ function Drill() {
                   disabled={revealed}
                   onClick={() => setPicked(oi)}
                   className={cx(
-                    'flex w-full items-start gap-3 rounded-xl border px-3.5 py-2.5 text-left text-[0.88rem] transition',
-                    picked === oi ? 'border-gold bg-gold-soft text-ink' : 'border-line bg-surface-2 text-ink-soft hover:border-line-strong',
+                    'press flex w-full items-start gap-3 rounded-xl border px-3.5 py-2.5 text-left text-[0.88rem] transition',
+                    picked === oi ? 'animate-answer-pop border-gold bg-gold-soft text-ink' : 'border-line bg-surface-2 text-ink-soft hover:border-line-strong',
                   )}
                 >
                   <span className="mono mt-0.5 text-[0.72rem] font-bold opacity-70">{LETTERS[oi]}</span>
@@ -354,7 +355,7 @@ function Drill() {
                 Reveal
               </Button>
             ) : (
-              <div className="mt-4 flex gap-2.5">
+              <div className="mt-4 flex gap-2.5 slide-up">
                 <Button variant="danger" size="lg" className="flex-1" onClick={() => void grade(false)}>
                   I missed it
                 </Button>
@@ -491,12 +492,13 @@ function Gates({ initialModule }: { initialModule: string | null }) {
           Mastery gates
         </div>
         <div className="max-h-[600px] overflow-y-auto p-2">
-          {(gates ?? []).map((g) => (
-            <button
-              key={g.id}
-              onClick={() => setMid(g.id)}
-              className={cx('mb-1 w-full rounded-xl px-3.5 py-3 text-left transition', mid === g.id ? 'bg-gold-soft' : 'hover:bg-surface-2')}
-            >
+          <StaggerGroup className="space-y-0.5">
+            {(gates ?? []).map((g) => (
+              <button
+                key={g.id}
+                onClick={() => setMid(g.id)}
+                className={cx('press mb-1 w-full rounded-xl px-3.5 py-3 text-left transition', mid === g.id ? 'bg-gold-soft' : 'hover:bg-surface-2')}
+              >
               <div className="flex items-center gap-2">
                 <span className={cx('mono text-[0.7rem] font-bold', mid === g.id ? 'text-gold' : 'text-muted')}>{g.id}</span>
                 <Badge tone={g.status === 'Passed' || g.status === 'Mastered' ? 'ok' : g.status === 'Ready' ? 'gold' : 'neutral'}>{g.status}</Badge>
@@ -506,7 +508,8 @@ function Gates({ initialModule }: { initialModule: string | null }) {
                 {g.mcq} questions · {g.attempts} attempts
               </div>
             </button>
-          ))}
+            ))}
+          </StaggerGroup>
         </div>
       </Card>
 
@@ -526,7 +529,7 @@ function Gates({ initialModule }: { initialModule: string | null }) {
                 : 'The weak spots are below. Fix them, come back after the cooldown.'}
             </p>
             {result.review ? (
-              <div className="mt-4 space-y-2">
+              <StaggerGroup className="mt-4 space-y-2">
                 {result.review.filter((r) => !r.ok).map((r) => (
                   <div key={r.id} className="rounded-xl border border-line bg-surface-2 px-3.5 py-2.5">
                     <p className="text-[0.87rem] font-medium text-ink">{r.q}</p>
@@ -535,7 +538,7 @@ function Gates({ initialModule }: { initialModule: string | null }) {
                     <p className="mt-1 text-[0.8rem] text-muted">{r.exp}</p>
                   </div>
                 ))}
-              </div>
+              </StaggerGroup>
             ) : null}
           </Card>
         ) : null}
@@ -545,7 +548,7 @@ function Gates({ initialModule }: { initialModule: string | null }) {
             <Empty>Pick a gate. The gate is the only thing that proves a module is finished.</Empty>
           )
         ) : (
-          <>
+          <div key={mid} className="space-y-5 page-enter">
             <Card>
               <div className="flex flex-wrap items-center gap-3">
                 <h2 className="font-display text-[1.5rem] font-bold text-ink">{detail.title}</h2>
@@ -565,7 +568,7 @@ function Gates({ initialModule }: { initialModule: string | null }) {
 
             <Card>
               <SectionTitle hint={`${detail.mcq.length} questions`}>Part 1 — Multiple choice</SectionTitle>
-              <div className="space-y-5">
+              <StaggerGroup className="space-y-5">
                 {detail.mcq.map((q, i) => (
                   <div key={q.id}>
                     <div className="mb-2 flex items-center gap-2">
@@ -579,8 +582,8 @@ function Gates({ initialModule }: { initialModule: string | null }) {
                           key={oi}
                           onClick={() => setAnswers((a) => ({ ...a, [q.id]: oi }))}
                           className={cx(
-                            'flex w-full items-start gap-3 rounded-xl border px-3.5 py-2.5 text-left text-[0.87rem] transition',
-                            answers[q.id] === oi ? 'border-gold bg-gold-soft text-ink' : 'border-line bg-surface-2 text-ink-soft hover:border-line-strong',
+                            'press flex w-full items-start gap-3 rounded-xl border px-3.5 py-2.5 text-left text-[0.87rem] transition',
+                            answers[q.id] === oi ? 'animate-answer-pop border-gold bg-gold-soft text-ink' : 'border-line bg-surface-2 text-ink-soft hover:border-line-strong',
                           )}
                         >
                           <span className="mono mt-0.5 text-[0.72rem] font-bold opacity-70">{LETTERS[oi]}</span>
@@ -590,12 +593,12 @@ function Gates({ initialModule }: { initialModule: string | null }) {
                     </div>
                   </div>
                 ))}
-              </div>
+              </StaggerGroup>
             </Card>
 
             <Card>
               <SectionTitle hint="be honest, the rubric is yours to hit">Part 2 — Teach it back</SectionTitle>
-              <div className="space-y-6">
+              <StaggerGroup className="space-y-6">
                 {detail.oral.map((o, i) => (
                   <div key={i} className="rounded-xl border border-line bg-surface-2 p-4">
                     <p className="text-[0.95rem] font-semibold text-ink">{o.prompt}</p>
@@ -636,7 +639,7 @@ function Gates({ initialModule }: { initialModule: string | null }) {
                     </div>
                   </div>
                 ))}
-              </div>
+              </StaggerGroup>
 
               <div className="sticky bottom-4 mt-5 flex items-center gap-3 rounded-2xl border border-line bg-surface/95 px-5 py-3.5 shadow-lg backdrop-blur">
                 <span className="text-[0.84rem] text-muted">
@@ -647,7 +650,7 @@ function Gates({ initialModule }: { initialModule: string | null }) {
                 </Button>
               </div>
             </Card>
-          </>
+          </div>
         )}
       </div>
     </div>

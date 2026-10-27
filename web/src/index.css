@@ -747,6 +747,70 @@ select {
   animation: page-enter 0.4s ease both;
 }
 
+/* word-by-word headline rise (SplitText) */
+.split-word {
+  display: inline-block;
+  opacity: 0;
+  animation: word-rise 0.55s cubic-bezier(0.22, 0.68, 0.24, 1) both;
+  will-change: transform, opacity;
+}
+
+@keyframes word-rise {
+  from { opacity: 0; transform: translateY(0.55em) rotate(1.5deg); }
+  to { opacity: 1; transform: none; }
+}
+
+/* answer micro-feedback: chosen option pops, graded options announce */
+@keyframes answer-pop {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.018); }
+  100% { transform: scale(1); }
+}
+
+.animate-answer-pop {
+  animation: answer-pop 0.32s cubic-bezier(0.22, 0.68, 0.24, 1);
+}
+
+@keyframes shake-x {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+
+.animate-wrong {
+  animation: shake-x 0.4s ease;
+}
+
+@keyframes correct-flash {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 45%, transparent); }
+  100% { box-shadow: 0 0 0 12px color-mix(in srgb, var(--ok) 0%, transparent); }
+}
+
+.animate-correct {
+  animation: correct-flash 0.6s ease-out;
+}
+
+/* tactile press for anything clickable */
+.press {
+  transition: transform 0.16s cubic-bezier(0.22, 0.68, 0.24, 1), box-shadow 0.16s ease, border-color 0.16s ease, background-color 0.16s ease, color 0.16s ease;
+}
+
+.press:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* gentle lift for interactive tiles/cards */
+.lift {
+  transition: transform 0.22s cubic-bezier(0.22, 0.68, 0.24, 1), box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+.lift:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
 /* ---------------------------------------------------------------- NYC skyline scene */
 .skyline-scene {
   --sky-top: #e9eef8;
@@ -891,9 +955,23 @@ select {
 
   .shimmer-gold,
   .page-enter,
+  .split-word,
+  .animate-answer-pop,
+  .animate-wrong,
+  .animate-correct,
   .win,
   .beacon,
   .sky-moon {
     animation: none !important;
+  }
+
+  .split-word {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .press:active:not(:disabled),
+  .lift:hover {
+    transform: none !important;
   }
 }

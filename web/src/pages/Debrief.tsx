@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { fireConfetti } from '../lib/confetti'
 import { QuoteLine } from '../components/Quote'
+import { StaggerGroup } from '../components/motion'
 import { Badge, Card, Empty, Field, LoadingButton, PageHeader, SectionTitle, Spinner, cx, inputCls } from '../components/ui'
 import { api } from '../lib/api'
 import { useApi } from '../lib/hooks'
@@ -198,7 +199,7 @@ export function Debrief() {
         {data.history.length === 0 ? (
           <Empty>No entries yet. Tonight is a good night to start.</Empty>
         ) : (
-          <div className="space-y-2">
+          <StaggerGroup as="div" className="space-y-2">
             {data.history.map((e) => (
               <details key={e.date} className="group rounded-xl border border-line bg-surface-2 px-4 py-3">
                 <summary className="flex cursor-pointer flex-wrap items-center gap-2 text-[0.86rem]">
@@ -215,7 +216,7 @@ export function Debrief() {
                 </div>
               </details>
             ))}
-          </div>
+          </StaggerGroup>
         )}
       </Card>
     </div>

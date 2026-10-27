@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
 import { QuoteLine } from '../components/Quote'
+import { StaggerGroup } from '../components/motion'
 import { Badge, Bar, Button, Card, Empty, PageHeader, SectionTitle, Spinner, cx } from '../components/ui'
 import { api, type ModuleDetail, type ModuleSummary } from '../lib/api'
 import { fmtViews } from '../lib/format'
@@ -133,13 +134,13 @@ export function Learn() {
             {loadingList && !modules ? (
               <Spinner label="Loading modules" />
             ) : (
-              <div className="max-h-[560px] overflow-y-auto p-2">
+              <StaggerGroup key={track} className="max-h-[560px] overflow-y-auto p-2">
                 {(modules ?? []).map((m) => (
                   <button
                     key={m.id}
                     onClick={() => selectModule(m.id)}
                     className={cx(
-                      'mb-1 w-full rounded-xl px-3.5 py-3 text-left transition',
+                      'press mb-1 w-full rounded-xl px-3.5 py-3 text-left transition',
                       mid === m.id ? 'bg-gold-soft' : 'hover:bg-surface-2',
                     )}
                   >
@@ -153,7 +154,7 @@ export function Learn() {
                     </div>
                   </button>
                 ))}
-              </div>
+              </StaggerGroup>
             )}
           </Card>
 
@@ -168,7 +169,7 @@ export function Learn() {
           ) : !detail ? (
             <Empty>Pick a module on the left.</Empty>
           ) : (
-            <div className="space-y-5">
+            <div key={detail.id} className="space-y-5 page-enter">
               <Card>
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
@@ -208,14 +209,14 @@ export function Learn() {
               <div className="grid gap-5 xl:grid-cols-2">
                 <Card>
                   <SectionTitle hint={`${detail.lessons.length} lessons`}>Syllabus</SectionTitle>
-                  <ol className="space-y-2">
+                  <StaggerGroup as="ol" className="space-y-2">
                     {detail.lessons.map((l, i) => (
                       <li key={i} className="flex gap-3 rounded-xl border border-line bg-surface-2 px-3.5 py-2.5">
                         <span className="mono text-[0.72rem] font-bold text-gold">{String(i + 1).padStart(2, '0')}</span>
                         <span className="text-[0.86rem] text-ink-soft">{l}</span>
                       </li>
                     ))}
-                  </ol>
+                  </StaggerGroup>
 
                   <div className="mt-5">
                     <div className="mb-2 text-[0.68rem] font-semibold tracking-[0.16em] text-muted uppercase">You will be able to</div>
@@ -235,7 +236,7 @@ export function Learn() {
                   {detail.videos.length === 0 ? (
                     <Empty>No videos synced for this module yet.</Empty>
                   ) : (
-                    <div className="max-h-[420px] space-y-2 overflow-y-auto pr-1">
+                    <StaggerGroup className="max-h-[420px] space-y-2 overflow-y-auto pr-1">
                       {detail.videos.map((v) => (
                         <div
                           key={v.id}
@@ -271,21 +272,21 @@ export function Learn() {
                           </div>
                         </div>
                       ))}
-                    </div>
+                    </StaggerGroup>
                   )}
                 </Card>
               </div>
 
               <Card>
                 <SectionTitle hint={`${detail.resources.length} curated`}>Reading &amp; resources</SectionTitle>
-                <div className="grid gap-2.5 md:grid-cols-2">
+                <StaggerGroup className="grid gap-2.5 md:grid-cols-2">
                   {detail.resources.map((r) => (
                     <a
                       key={r.id}
                       href={r.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-xl border border-line bg-surface-2 px-4 py-3 transition hover:border-gold"
+                      className="lift rounded-xl border border-line bg-surface-2 px-4 py-3 hover:border-gold"
                     >
                       <div className="flex items-center gap-2">
                         <Badge tone="neutral">{r.type}</Badge>
@@ -295,7 +296,7 @@ export function Learn() {
                       <div className="text-[0.76rem] text-muted">{r.desc}</div>
                     </a>
                   ))}
-                </div>
+                </StaggerGroup>
               </Card>
             </div>
           )}

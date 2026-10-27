@@ -1,4 +1,4 @@
-import { useEffect, useState, type ButtonHTMLAttributes, type ReactNode } from 'react'
+import { useEffect, useState, type ButtonHTMLAttributes, type CSSProperties, type ReactNode } from 'react'
 
 export function cx(...parts: (string | false | null | undefined)[]) {
   return parts.filter(Boolean).join(' ')
@@ -8,12 +8,14 @@ export function Card({
   children,
   className,
   padded = true,
+  style,
 }: {
   children: ReactNode
   className?: string
   padded?: boolean
+  style?: CSSProperties
 }) {
-  return <div className={cx('card', padded && 'p-5', className)}>{children}</div>
+  return <div className={cx('card', padded && 'p-5', className)} style={style}>{children}</div>
 }
 
 export function SectionTitle({ children, hint }: { children: ReactNode; hint?: ReactNode }) {
@@ -74,7 +76,7 @@ export function Button({
       type={type}
       {...rest}
       className={cx(
-        'inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition disabled:cursor-not-allowed disabled:opacity-45',
+        'press inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition disabled:cursor-not-allowed disabled:opacity-45',
         VARIANTS[variant],
         sizes[size],
         className,

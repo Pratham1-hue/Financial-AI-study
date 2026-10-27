@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { fireConfetti } from '../lib/confetti'
+import { StaggerGroup } from '../components/motion'
 import { LoadingButton, Card, Empty, Field, PageHeader, SectionTitle, Spinner, cx, inputCls } from '../components/ui'
 import { api } from '../lib/api'
 import { fmtMoney } from '../lib/format'
@@ -156,7 +157,7 @@ export function Profile() {
       {/* stats */}
       <Card>
         <SectionTitle hint="your numbers">Stats</SectionTitle>
-        <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <StaggerGroup className="grid gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {[
             ['XP', fmtMoney(backupPreview?.xp ?? 0), 'lifetime'],
             ['Modules mastered', String(backupPreview?.modules_done ?? 0), `of ${backupPreview?.modules_total ?? 18}`],
@@ -170,7 +171,7 @@ export function Profile() {
               <div className="mt-0.5 text-[0.68rem] text-muted">{sub}</div>
             </Card>
           ))}
-        </div>
+        </StaggerGroup>
       </Card>
 
       {/* backup */}

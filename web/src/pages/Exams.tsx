@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { fireConfetti } from '../lib/confetti'
 import { fmtClock } from '../lib/format'
+import { StaggerGroup } from '../components/motion'
 import { Badge, Button, Card, Empty, LoadingButton, PageHeader, ProgressRing, SectionTitle, Spinner, cx } from '../components/ui'
 import { api } from '../lib/api'
 import { useApi } from '../lib/hooks'
@@ -193,11 +194,11 @@ export function Exams() {
           title="Exams"
           subtitle="Timed, multi-module assessments drawn from the question bank. 80% to master. One sitting — the clock does not pause."
         />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <StaggerGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {exams.map((ex) => (
             <ExamCard key={ex.id} exam={ex} onStart={() => void startExam(ex.id)} />
           ))}
-        </div>
+        </StaggerGroup>
         <div className="rounded-xl border border-line bg-surface-2 p-5 text-[0.85rem] text-muted">
           <p className="font-semibold mb-1">How exams work</p>
           <ul className="space-y-1 list-disc list-inside text-muted">
@@ -283,7 +284,7 @@ export function Exams() {
           {result.review && result.review.filter((r) => !r.ok).length > 0 ? (
             <div className="mb-4">
               <SectionTitle>Review — get these right next time</SectionTitle>
-              <div className="space-y-2.5">
+              <StaggerGroup className="space-y-2.5">
                 {result.review.filter((r) => !r.ok).map((r) => (
                   <div key={r.id} className="rounded-xl border border-line bg-surface-2 px-3.5 py-2.5">
                     <p className="text-[0.87rem] font-medium text-ink">{r.q}</p>
@@ -292,7 +293,7 @@ export function Exams() {
                     <p className="mt-1 text-[0.8rem] text-muted">{r.exp}</p>
                   </div>
                 ))}
-              </div>
+              </StaggerGroup>
             </div>
           ) : null}
 
@@ -307,11 +308,11 @@ export function Exams() {
       ) : null}
 
       {!result && timeLeft > 0 ? (
-        <div className="space-y-5">
+        <StaggerGroup className="space-y-5">
           {examData.questions.map((q, i) => {
             const chosen = answers[q.id]
             return (
-              <Card key={q.id} className="fade-up">
+              <Card key={q.id}>
                 <div className="mb-3 flex items-center gap-2">
                   <span className="mono text-[0.72rem] font-bold text-gold">Q{i + 1}</span>
                   <Badge tone="neutral">{q.module}</Badge>
@@ -326,8 +327,8 @@ export function Exams() {
                       type="button"
                       onClick={() => setAnswers((a) => ({ ...a, [q.id]: oi }))}
                       className={cx(
-                        'flex w-full items-start gap-3 rounded-xl border px-3.5 py-2.5 text-left text-[0.87rem] transition',
-                        chosen === oi ? 'border-gold bg-gold-soft text-ink' : 'border-line bg-surface-2 text-ink-soft hover:border-line-strong',
+                        'press flex w-full items-start gap-3 rounded-xl border px-3.5 py-2.5 text-left text-[0.87rem] transition',
+                        chosen === oi ? 'animate-answer-pop border-gold bg-gold-soft text-ink' : 'border-line bg-surface-2 text-ink-soft hover:border-line-strong',
                       )}
                     >
                       <span className="mono mt-0.5 text-[0.72rem] font-bold opacity-70">{['A', 'B', 'C', 'D'][oi]}</span>
@@ -351,7 +352,7 @@ export function Exams() {
               {busy ? 'Submitting…' : 'Submit exam'}
             </LoadingButton>
           </div>
-        </div>
+        </StaggerGroup>
       ) : null}
     </div>
   )

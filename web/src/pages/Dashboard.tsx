@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Confetti } from '../components/Confetti'
 import { LineChart } from '../components/LineChart'
 import { MagazineCover } from '../components/MagazineCover'
-import { CountUp, StaggerGroup } from '../components/motion'
+import { CountUp, SplitText, StaggerGroup } from '../components/motion'
 import { QuoteLine } from '../components/Quote'
 import { ScrollReveal } from '../components/ScrollReveal'
 import { Skyline } from '../components/Skyline'
@@ -183,7 +183,7 @@ export function Dashboard() {
                   ) : null}
                 </div>
                 <h1 className="font-display text-[2.1rem] leading-[1.1] font-bold text-ink">
-                  {greeting}. {profile.name || 'Trader'} — today is a rep.
+                  <SplitText text={`${greeting}. ${profile.name || 'Trader'} — today is a rep.`} delay={220} />
                 </h1>
                 <p className="mt-3 max-w-2xl text-[0.95rem] text-muted">{plan.assignment}</p>
                 {profile.why ? (

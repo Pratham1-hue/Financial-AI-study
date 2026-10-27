@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 
 import { Badge, Card, Empty, PageHeader, SectionTitle, Spinner, cx, inputCls } from '../components/ui'
 import { QuoteLine } from '../components/Quote'
+import { StaggerGroup } from '../components/motion'
 import { type Resource } from '../lib/api'
 import { useApi } from '../lib/hooks'
 
@@ -78,14 +79,14 @@ export function Resources() {
             {items.length === 0 ? (
               <Empty>No resources match your filters.</Empty>
             ) : view === 'list' ? (
-              <div className="space-y-2">
+              <StaggerGroup key="list" className="space-y-2">
                 {items.map((r) => (
                   <a
                     key={r.id}
                     href={r.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="glass-tile flex items-start gap-3 rounded-xl px-3.5 py-3 transition hover:border-gold"
+                    className="glass-tile lift flex items-start gap-3 rounded-xl px-3.5 py-3 hover:border-gold"
                   >
                     <div className="mt-0.5 shrink-0 rounded-lg border border-[var(--glass-border)] bg-[var(--glass-lo)] px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-wider">
                       {r.track}
@@ -101,16 +102,16 @@ export function Resources() {
                     <span className="text-[0.7rem] text-muted underline">Open →</span>
                   </a>
                 ))}
-              </div>
+              </StaggerGroup>
             ) : (
-              <div className="grid gap-3 sm:grid-cols-2">
+              <StaggerGroup key="grid" className="grid gap-3 sm:grid-cols-2">
                 {items.map((r) => (
                   <a
                     key={r.id}
                     href={r.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="glass-tile rounded-xl p-4 transition hover:border-gold hover:shadow-sm"
+                    className="glass-tile lift rounded-xl p-4 hover:border-gold"
                   >
                     <div className="flex items-center justify-between mb-2">
                       <Badge tone="neutral">{r.type}</Badge>
@@ -124,7 +125,7 @@ export function Resources() {
                     </div>
                   </a>
                 ))}
-              </div>
+              </StaggerGroup>
             )}
           </Card>
         </div>
@@ -164,7 +165,7 @@ function FilterChip({ label, options, value, onChange }: { label: string; option
             key={o}
             onClick={() => onChange(o)}
             className={cx(
-              'rounded-lg border px-2.5 py-1 text-[0.72rem] font-semibold transition',
+              'press rounded-lg border px-2.5 py-1 text-[0.72rem] font-semibold transition',
               value === o ? 'border-gold bg-gold-soft text-gold' : 'border-line text-muted hover:text-ink hover:border-line-strong',
             )}
           >

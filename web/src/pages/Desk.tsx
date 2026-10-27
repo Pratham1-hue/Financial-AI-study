@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { LineChart } from '../components/LineChart'
 import { QuoteLine } from '../components/Quote'
+import { CountUp, StaggerGroup } from '../components/motion'
 import { Badge, Bar, Button, Card, Empty, PageHeader, SectionTitle, Spinner, cx, inputCls } from '../components/ui'
 import { api, type DeskGrade, type DeskRound } from '../lib/api'
 import { fmtMoney, fmtPct } from '../lib/format'
@@ -147,10 +148,12 @@ export function Desk() {
       </Card>
 
       {result ? (
-        <Card className={cx('fade-up', result.score >= 60 ? 'border-[color-mix(in_srgb,var(--ok)_40%,transparent)]' : 'border-[color-mix(in_srgb,var(--bad)_40%,transparent)]')}>
+        <Card key={`grade-${result.score}-${result.ret}`} className={cx('fade-up', result.score >= 60 ? 'border-[color-mix(in_srgb,var(--ok)_40%,transparent)]' : 'border-[color-mix(in_srgb,var(--bad)_40%,transparent)]')}>
           <div className="flex flex-wrap items-start gap-6">
             <div className="text-center">
-              <div className="mono text-[2.6rem] leading-none font-bold text-ink">{result.score}</div>
+              <div className="mono text-[2.6rem] leading-none font-bold text-ink">
+                <CountUp value={result.score} />
+              </div>
               <div className="mt-1 text-[0.7rem] font-semibold tracking-[0.16em] text-muted uppercase">score / 100</div>
             </div>
             <div className="grid flex-1 grid-cols-2 gap-4 sm:grid-cols-4">
@@ -167,14 +170,14 @@ export function Desk() {
               ))}
             </div>
           </div>
-          <ul className="mt-4 space-y-1.5">
+          <StaggerGroup as="ul" className="mt-4 space-y-1.5">
             {result.notes.map((n, i) => (
               <li key={i} className="flex gap-2 text-[0.86rem] text-ink-soft">
                 <span className="text-gold">▸</span>
                 {n}
               </li>
             ))}
-          </ul>
+          </StaggerGroup>
         </Card>
       ) : null}
 
@@ -321,7 +324,7 @@ export function Desk() {
             </div>
             <div className="mt-3 flex flex-wrap gap-1.5">
               {[10, 50, 100, 250].map((n) => (
-                <button key={n} onClick={() => setQty(n)} className="rounded-lg border border-line px-2.5 py-1 text-[0.75rem] text-muted transition hover:border-gold hover:text-gold">
+                <button key={n} onClick={() => setQty(n)} className="press rounded-lg border border-line px-2.5 py-1 text-[0.75rem] text-muted hover:border-gold hover:text-gold">
                   {n}
                 </button>
               ))}
@@ -329,8 +332,9 @@ export function Desk() {
 
             {message ? (
               <div
+                key={`${message.text}-${round.trades.length}`}
                 className={cx(
-                  'mt-3.5 rounded-xl border px-3.5 py-2.5 text-[0.83rem]',
+                  'slide-up mt-3.5 rounded-xl border px-3.5 py-2.5 text-[0.83rem]',
                   message.ok ? 'border-[color-mix(in_srgb,var(--ok)_30%,transparent)] bg-ok-soft text-ok' : 'border-[color-mix(in_srgb,var(--bad)_30%,transparent)] bg-bad-soft text-bad',
                 )}
               >

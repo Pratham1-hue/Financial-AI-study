@@ -3,7 +3,7 @@
  *  All respect prefers-reduced-motion and degrade gracefully without
  *  IntersectionObserver.
  */
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { Fragment, useEffect, useRef, useState, type ReactNode } from 'react'
 
 import { cx } from './ui'
 
@@ -134,15 +134,18 @@ export function ScrollProgress() {
 
 /* ---------------------------------------------------------------- stagger group */
 
-/** Grid/list whose children pop in one-by-one when it scrolls into view. */
+/** Grid/list whose children pop in one-by-one when it scrolls into view.
+ *  `as` lets it render semantic elements (ol/ul/tbody) while keeping the ref. */
 export function StaggerGroup({
   children,
   className,
   threshold = 0.12,
+  as = 'div',
 }: {
   children: ReactNode
   className?: string
   threshold?: number
+  as?: 'div' | 'ol' | 'ul' | 'tbody'
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [shown, setShown] = useState(false)
@@ -160,16 +163,48 @@ export function StaggerGroup({
           io.disconnect()
         }
       },
-      { threshold },
+      // 0 guarantees very tall groups (long lists) still reveal — crossing
+      // 0.12 alone can be unreachable when the group is taller than the viewport
+      { threshold: [0, threshold] },
     )
     io.observe(el)
     return () => io.disconnect()
   }, [threshold])
 
+  const Comp = as as 'div'
   return (
-    <div ref={ref} data-revealed={shown} className={cx('stagger-group', className)}>
+    <Comp ref={ref} data-revealed={shown} className={cx('stagger-group', className)}>
       {children}
-    </div>
+    </Comp>
+  )
+}
+
+/* ---------------------------------------------------------------- split text */
+
+/** Headline that rises word-by-word. Screen readers get the plain sentence. */
+export function SplitText({
+  text,
+  delay = 0,
+  step = 55,
+  className,
+}: {
+  text: string
+  delay?: number
+  step?: number
+  className?: string
+}) {
+  const words = text.split(' ')
+  return (
+    <span className={cx('split-text', className)} aria-label={text}>
+      {words.map((w, i) => (
+        <Fragment key={`${w}-${i}`}>
+          <span aria-hidden="true" className="split-word" style={{ animationDelay: `${delay + i * step}ms` }}>
+            {w}
+          </span>
+          {i < words.length - 1 ? ' ' : null}
+        </Fragment>
+      ))}
+    </span>
   )
 }
 

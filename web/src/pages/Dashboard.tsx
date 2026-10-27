@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { Confetti } from '../components/Confetti'
 import { LineChart } from '../components/LineChart'
 import { MagazineCover } from '../components/MagazineCover'
+import { CountUp, StaggerGroup } from '../components/motion'
 import { QuoteLine } from '../components/Quote'
 import { ScrollReveal } from '../components/ScrollReveal'
 import { Skyline } from '../components/Skyline'
@@ -17,7 +18,7 @@ function DayScoreRing({ pct, value }: { pct: number; value: number }) {
   const color = pct >= 80 ? 'var(--ok)' : pct >= 60 ? 'var(--gold)' : 'var(--bad)'
   return (
     <Card className="relative p-5">
-      <ProgressRing pct={pct} size={140} stroke={11} color={color} label={`${value}%`} sub="day score" />
+      <ProgressRing pct={pct / 100} size={140} stroke={11} color={color} label={`${value}%`} sub="day score" />
       <div className="absolute -top-3 -right-3 flex items-center gap-1 px-2 py-0.5 rounded-full border border-line bg-surface-2 text-[0.68rem] font-semibold text-muted">
         <span className="w-2 h-2 rounded-full bg-gold animate-ok" />
         vs yesterday
@@ -174,7 +175,7 @@ export function Dashboard() {
             <div className="relative grid gap-8 p-7 xl:grid-cols-[1fr_300px] xl:items-start">
               <div className="relative z-10 min-w-0 max-w-2xl">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-[0.68rem] font-semibold tracking-[0.26em] text-gold uppercase">
+                  <span className="shimmer-gold text-[0.68rem] font-semibold tracking-[0.26em] uppercase">
                     Day {plan.day} of {plan.days_total} · {profile.target_role || 'the mission'}
                   </span>
                   {streak > 0 ? (
@@ -212,7 +213,7 @@ export function Dashboard() {
               </div>
 
               <div className="flex flex-col items-center gap-6 min-w-0 max-w-[300px]">
-                <ProgressRing pct={goalPct * 100} size={124} stroke={11} label={fmtHM(metrics.focus_min_today).replace(' ', '')} sub="focus goal" />
+                <ProgressRing pct={goalPct} size={124} stroke={11} label={fmtHM(metrics.focus_min_today).replace(' ', '')} sub="focus goal" />
                 <DayScoreRing pct={metrics.day_score} value={metrics.day_score} />
               </div>
             </div>
@@ -226,10 +227,12 @@ export function Dashboard() {
 
       {/* metrics */}
       <ScrollReveal variant="fade-up" delay={150} once>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StaggerGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Card>
             <div className="text-[0.68rem] font-semibold tracking-[0.16em] text-muted uppercase">Focus today</div>
-            <div className="mono mt-1.5 text-[1.35rem] font-bold text-ink">{fmtHM(metrics.focus_min_today)}</div>
+            <div className="mono mt-1.5 text-[1.35rem] font-bold text-ink">
+              <CountUp value={metrics.focus_min_today} format={(n) => fmtHM(Math.round(n))} />
+            </div>
             <div className="mt-2">
               <Bar
                 value={metrics.focus_min_today}
@@ -242,13 +245,15 @@ export function Dashboard() {
           <Card>
             <div className="text-[0.68rem] font-semibold tracking-[0.16em] text-muted uppercase">Streak</div>
             <div className={cx('mono mt-1.5 text-[1.6rem] leading-none font-bold', streak > 0 ? 'text-gold' : 'text-ink')}>
-              {streak} days
+              <CountUp value={streak} /> days
             </div>
             <div className="mt-2 text-[0.78rem] text-muted">{fmtHM(metrics.all_time_hours * 60)} locked all-time</div>
           </Card>
           <Card>
             <div className="text-[0.68rem] font-semibold tracking-[0.16em] text-muted uppercase">Mastery index</div>
-            <div className="mono mt-1.5 text-[1.35rem] font-bold text-gold">{metrics.mastery_index}%</div>
+            <div className="mono mt-1.5 text-[1.35rem] font-bold text-gold">
+              <CountUp value={metrics.mastery_index} decimals={Number.isInteger(metrics.mastery_index) ? 0 : 1} />%
+            </div>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {Object.entries(metrics.mastery_parts).map(([k, v]) => (
                 <Badge key={k} tone="neutral">
@@ -259,13 +264,15 @@ export function Dashboard() {
           </Card>
           <Card>
             <div className="text-[0.68rem] font-semibold tracking-[0.16em] text-muted uppercase">XP</div>
-            <div className="mono mt-1.5 text-[1.35rem] font-bold text-ink">{fmtMoney(metrics.xp)}</div>
+            <div className="mono mt-1.5 text-[1.35rem] font-bold text-ink">
+              <CountUp value={metrics.xp} format={(n) => fmtMoney(Math.round(n))} />
+            </div>
             <div className="mt-2 text-[0.78rem] text-muted">
               {metrics.level_title}
               {rank.next ? ` · ${rank.next[0]} XP → ${rank.next[1]}` : ' · top rank'}
             </div>
           </Card>
-        </div>
+        </StaggerGroup>
       </ScrollReveal>
 
       {/* loop + stock */}
@@ -273,7 +280,7 @@ export function Dashboard() {
         <div className="grid gap-5 lg:grid-cols-[1.15fr_1fr]">
           <Card>
             <SectionTitle hint={`${loop.filter((l) => l.done).length}/${loop.length} complete`}>Today&apos;s loop</SectionTitle>
-            <div className="space-y-2.5">
+            <StaggerGroup className="space-y-2.5">
               {loop.map((step, i) => (
                 <Link
                   key={step.name}
@@ -295,7 +302,7 @@ export function Dashboard() {
                   <span className="ml-auto text-[0.75rem] text-muted">{step.done ? 'done' : 'open →'}</span>
                 </Link>
               ))}
-            </div>
+            </StaggerGroup>
 
             <div className="mt-5 space-y-3">
               <div className="text-[0.68rem] font-semibold tracking-[0.16em] text-muted uppercase">Day parts</div>
@@ -316,7 +323,9 @@ export function Dashboard() {
               <SectionTitle hint={<Link to="/desk" className="text-gold">trade →</Link>}>$LAKSH — stock of you</SectionTitle>
               <div className="flex items-end justify-between">
                 <div>
-                  <div className="mono text-[2rem] leading-none font-bold text-ink">${stock.price.toFixed(2)}</div>
+                  <div className="mono text-[2rem] leading-none font-bold text-ink">
+                    <CountUp value={stock.price} decimals={2} prefix="$" />
+                  </div>
                   <div className={cx('mono mt-1.5 text-[0.85rem] font-semibold', stock.change_pct >= 0 ? 'text-ok' : 'text-bad')}>
                     {fmtSigned(stock.change_pct)}% today
                   </div>
@@ -360,7 +369,7 @@ export function Dashboard() {
             {modules.length === 0 ? (
               <Empty>Nothing started. Open the curriculum and begin A1.</Empty>
             ) : (
-              <div className="grid gap-2.5 sm:grid-cols-2">
+              <StaggerGroup className="grid gap-2.5 sm:grid-cols-2">
                 {modules.map((m) => (
                   <Link
                     key={m.id}
@@ -375,7 +384,7 @@ export function Dashboard() {
                     <div className="text-[0.75rem] text-muted">{m.track} · weeks {m.weeks.join(', ')}</div>
                   </Link>
                 ))}
-              </div>
+              </StaggerGroup>
             )}
           </Card>
 
@@ -413,7 +422,7 @@ export function Dashboard() {
       <ScrollReveal variant="fade-up" delay={300} once>
         <Card>
           <SectionTitle hint="the daily rhythm">Bootcamp schedule</SectionTitle>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <StaggerGroup className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {bootcamp.map((b) => (
               <div key={b.name} className="rounded-xl border border-line bg-surface-2 p-4">
                 <div className="flex items-center justify-between">
@@ -424,7 +433,7 @@ export function Dashboard() {
                 <p className="mt-1.5 text-[0.82rem] text-muted">{b.desc}</p>
               </div>
             ))}
-          </div>
+          </StaggerGroup>
         </Card>
       </ScrollReveal>
     </div>

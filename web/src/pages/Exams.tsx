@@ -235,7 +235,7 @@ export function Exams() {
             />
           ) : (
             <div className="flex items-center gap-3">
-              <ProgressRing pct={pctAnswered} size={70} stroke={8} label={fmtClock(timeLeft)} sub="remaining" />
+              <ProgressRing pct={pctAnswered / 100} size={70} stroke={8} label={fmtClock(timeLeft)} sub="remaining" />
               <Badge tone={timeLeft <= 60 ? 'bad' : 'neutral'}>{answered}/{examData.questions.length} answered</Badge>
             </div>
           )

@@ -6,6 +6,8 @@ import { fmtMoney, fmtSigned } from '../lib/format'
 import { useApp } from '../state/app'
 import { useTheme } from '../theme'
 import { Avatar, Badge, cx } from './ui'
+import { NYCClock, ScrollProgress } from './motion'
+import { ParallaxSkyline } from './ParallaxSkyline'
 import { SpaceBackground } from './SpaceBackground'
 
 const NAV = [
@@ -119,6 +121,7 @@ export function Shell() {
 
   return (
     <div className="relative min-h-screen">
+      <ScrollProgress />
       <SpaceBackground />
       <div className="aurora" aria-hidden="true" />
 
@@ -304,17 +307,27 @@ export function Shell() {
         <Ticker />
       </div>
 
-      <main className="mx-auto w-full max-w-[1480px] flex-1 px-3 py-6 sm:px-5 md:px-7 md:py-8">
+      <main key={location.pathname} className="page-enter mx-auto w-full max-w-[1480px] flex-1 px-3 py-6 sm:px-5 md:px-7 md:py-8">
         <Outlet />
       </main>
 
-      <footer className="mx-auto w-full max-w-[1480px] px-4 pb-6 md:px-7">
-        <div className="flex flex-col items-center gap-1.5 border-t border-[var(--glass-border)] pt-5 text-center text-[0.75rem] text-muted">
-          <span className="font-display text-[0.98rem] text-ink-soft italic">
-            &ldquo;The harder you work, the harder it is to surrender.&rdquo;
-          </span>
-          <span>Built for one person with one goal. · Laksh · New York</span>
-        </div>
+      {/* immersive NYC skyline footer */}
+      <footer className="w-full">
+        <ParallaxSkyline height={300}>
+          <div className="mx-auto flex max-w-[1480px] flex-col items-center gap-2 px-4 pb-6 text-center">
+            <span className="shimmer-gold font-display text-[1rem] italic drop-shadow-[0_2px_6px_rgba(0,0,0,0.55)]">
+              &ldquo;The harder you work, the harder it is to surrender.&rdquo;
+            </span>
+            <span className="text-[0.75rem] text-white/75 drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
+              Built for one person with one goal. · Laksh
+            </span>
+            <span className="mono flex items-center gap-2 text-[0.66rem] font-semibold tracking-[0.18em] text-white/65 uppercase drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
+              New York
+              <span className="h-1 w-1 animate-pulse rounded-full bg-gold-2" aria-hidden="true" />
+              <NYCClock />
+            </span>
+          </div>
+        </ParallaxSkyline>
       </footer>
     </div>
   )

@@ -10,6 +10,7 @@ export function SpaceBackground() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
     const g = ctx
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     let width = 0
     let height = 0
@@ -75,15 +76,17 @@ export function SpaceBackground() {
       }
       g.globalAlpha = 1
 
-      requestAnimationFrame(draw)
+      if (!reduced) rafId = requestAnimationFrame(draw)
     }
 
+    let rafId = 0
     window.addEventListener('resize', resize)
     resize()
     draw()
 
     return () => {
       window.removeEventListener('resize', resize)
+      cancelAnimationFrame(rafId)
     }
   }, [])
 

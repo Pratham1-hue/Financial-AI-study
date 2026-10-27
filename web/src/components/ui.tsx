@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import { useEffect, useState, type ButtonHTMLAttributes, type ReactNode } from 'react'
 
 export function cx(...parts: (string | false | null | undefined)[]) {
   return parts.filter(Boolean).join(' ')
@@ -40,7 +40,7 @@ export function PageHeader({
     <header className="fade-up mb-6 flex flex-wrap items-end justify-between gap-4">
       <div className="max-w-3xl">
         {eyebrow ? (
-          <div className="mb-1 text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-gold">{eyebrow}</div>
+          <div className="shimmer-gold mb-1 text-[0.68rem] font-semibold uppercase tracking-[0.24em]">{eyebrow}</div>
         ) : null}
         <h1 className="text-[2rem] leading-tight font-bold text-ink">{title}</h1>
         {subtitle ? <p className="mt-1.5 text-[0.95rem] text-muted">{subtitle}</p> : null}
@@ -149,10 +149,26 @@ export function Bar({
 }) {
   const pct = Math.max(0, Math.min(1, max ? value / max : 0)) * 100
   const bg = { gold: 'var(--gold)', ok: 'var(--ok)', bad: 'var(--bad)', navy: 'var(--navy)' }[tone]
+
+  // grow from 0 on mount so the bar always animates in
+  const [shown, setShown] = useState(false)
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setShown(true))
+    // fallback if rAF is suspended (occluded window / battery saver)
+    const t = window.setTimeout(() => setShown(true), 250)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.clearTimeout(t)
+    }
+  }, [])
+
   return (
     <div>
       <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--glass-lo)]">
-        <div className="h-full rounded-full transition-[width] duration-500" style={{ width: `${pct}%`, background: bg }} />
+        <div
+          className="bar-fill h-full rounded-full transition-[width] duration-700"
+          style={{ width: `${shown ? pct : 0}%`, background: bg }}
+        />
       </div>
       {label ? <div className="mt-1.5 text-[0.76rem] text-muted">{label}</div> : null}
     </div>
@@ -257,7 +273,22 @@ export function ProgressRing({ pct, size = 110, stroke = 10, color = 'var(--gold
 }) {
   const r = (size - stroke) / 2
   const c = 2 * Math.PI * r
-  const v = Math.max(0, Math.min(1, pct))
+  // accepts 0–1, or 0–100 (values > 1 are treated as percentages)
+  const raw = pct > 1 ? pct / 100 : pct
+  const v = Math.max(0, Math.min(1, raw))
+
+  // sweep from empty on mount so the ring always draws itself in
+  const [shown, setShown] = useState(false)
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setShown(true))
+    // fallback if rAF is suspended (occluded window / battery saver)
+    const t = window.setTimeout(() => setShown(true), 250)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.clearTimeout(t)
+    }
+  }, [])
+
   return (
     <div className="relative" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
@@ -271,8 +302,8 @@ export function ProgressRing({ pct, size = 110, stroke = 10, color = 'var(--gold
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={c}
-          strokeDashoffset={c * (1 - v)}
-          style={{ transition: 'stroke-dashoffset 0.7s ease' }}
+          strokeDashoffset={shown ? c * (1 - v) : c}
+          style={{ transition: 'stroke-dashoffset 0.9s cubic-bezier(0.22, 0.68, 0.24, 1)' }}
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">

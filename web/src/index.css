@@ -668,6 +668,203 @@ select {
   opacity: 0.7;
 }
 
+/* ---------------------------------------------------------------- modern motion */
+@keyframes shimmer {
+  0% { background-position: 180% center; }
+  100% { background-position: -80% center; }
+}
+
+/* gold foil shimmer for display text — beats layered utilities (unlayered) */
+.shimmer-gold {
+  background: linear-gradient(
+    100deg,
+    var(--gold) 25%,
+    var(--gold-2) 42%,
+    color-mix(in srgb, var(--gold-2) 50%, #fff) 50%,
+    var(--gold-2) 58%,
+    var(--gold) 75%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 5s linear infinite;
+}
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 70;
+  pointer-events: none;
+}
+
+.scroll-progress::after {
+  content: '';
+  display: block;
+  height: 100%;
+  width: var(--sp, 0%);
+  background: linear-gradient(90deg, var(--gold), var(--gold-2) 55%, var(--navy));
+  box-shadow: 0 0 10px color-mix(in srgb, var(--gold) 55%, transparent);
+}
+
+/* staggered entrances: children of [data-revealed='false'] wait offstage,
+   then pop up one-by-one with per-child delays */
+.stagger-group[data-revealed='false'] > * {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.stagger-group[data-revealed='true'] > * {
+  animation: fade-up 0.55s cubic-bezier(0.22, 0.68, 0.24, 1) both;
+  animation-delay: calc(var(--stagger-step, 70ms) * var(--stagger-i, 0));
+}
+
+.stagger-group[data-revealed='true'] > *:nth-child(1) { --stagger-i: 0; }
+.stagger-group[data-revealed='true'] > *:nth-child(2) { --stagger-i: 1; }
+.stagger-group[data-revealed='true'] > *:nth-child(3) { --stagger-i: 2; }
+.stagger-group[data-revealed='true'] > *:nth-child(4) { --stagger-i: 3; }
+.stagger-group[data-revealed='true'] > *:nth-child(5) { --stagger-i: 4; }
+.stagger-group[data-revealed='true'] > *:nth-child(6) { --stagger-i: 5; }
+.stagger-group[data-revealed='true'] > *:nth-child(7) { --stagger-i: 6; }
+.stagger-group[data-revealed='true'] > *:nth-child(8) { --stagger-i: 7; }
+.stagger-group[data-revealed='true'] > *:nth-child(9) { --stagger-i: 8; }
+.stagger-group[data-revealed='true'] > *:nth-child(10) { --stagger-i: 9; }
+.stagger-group[data-revealed='true'] > *:nth-child(11) { --stagger-i: 10; }
+.stagger-group[data-revealed='true'] > *:nth-child(12) { --stagger-i: 11; }
+.stagger-group[data-revealed='true'] > *:nth-child(13) { --stagger-i: 12; }
+.stagger-group[data-revealed='true'] > *:nth-child(14) { --stagger-i: 13; }
+.stagger-group[data-revealed='true'] > *:nth-child(n + 15) { --stagger-i: 14; }
+
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+.page-enter {
+  animation: page-enter 0.4s ease both;
+}
+
+/* ---------------------------------------------------------------- NYC skyline scene */
+.skyline-scene {
+  --sky-top: #e9eef8;
+  --sky-mid: #f6ead0;
+  --sky-bot: #f8dfae;
+  --bldg-far: #c3c9db;
+  --bldg-mid: #8b92a8;
+  --bldg-near: #2b3140;
+  --win-col: #d9a441;
+
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(to bottom, var(--sky-top) 0%, var(--sky-mid) 62%, var(--sky-bot) 100%);
+  border-top: 1px solid color-mix(in srgb, var(--gold) 28%, transparent);
+}
+
+[data-theme='dark'] .skyline-scene {
+  --sky-top: #04060d;
+  --sky-mid: #081120;
+  --sky-bot: #132338;
+  --bldg-far: #1b2537;
+  --bldg-mid: #101827;
+  --bldg-near: #05090f;
+  --win-col: #f0b64a;
+}
+
+.sky-stars {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+[data-theme='dark'] .sky-stars {
+  opacity: 1;
+}
+
+.sky-glow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 60%;
+  background: radial-gradient(120% 100% at 50% 100%, color-mix(in srgb, var(--gold) 26%, transparent), transparent 72%);
+  pointer-events: none;
+}
+
+.sky-moon {
+  position: absolute;
+  top: 34px;
+  right: 9%;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff8e0, #f3d489 60%, #e3b95f);
+  box-shadow: 0 0 44px rgba(240, 182, 74, 0.4);
+  opacity: 0.92;
+  animation: moon-drift 9s ease-in-out infinite;
+  will-change: transform;
+}
+
+[data-theme='dark'] .sky-moon {
+  background: radial-gradient(circle at 35% 35%, #fdfdff, #dfe6f5 60%, #b9c6e0);
+  box-shadow: 0 0 38px rgba(170, 195, 255, 0.35);
+}
+
+@keyframes moon-drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.sky-layer {
+  position: absolute;
+  left: -4%;
+  bottom: 0;
+  width: 108%;
+  display: block;
+  will-change: transform;
+}
+
+@keyframes win-twinkle {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+.win {
+  animation-name: win-twinkle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes beacon-blink {
+  0%, 45% { opacity: 0.12; }
+  55%, 100% { opacity: 1; }
+}
+
+.beacon {
+  fill: #ff5a4d;
+  animation: beacon-blink 2.4s ease-in-out infinite;
+  filter: drop-shadow(0 0 5px rgba(255, 90, 77, 0.95));
+}
+
+.street-glow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 46px;
+  background: linear-gradient(to top, color-mix(in srgb, var(--gold) 38%, transparent), transparent);
+  pointer-events: none;
+}
+
+.skyline-overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 5;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .marquee,
   .fade-up,
@@ -684,5 +881,19 @@ select {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+  }
+
+  .stagger-group > * {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  .shimmer-gold,
+  .page-enter,
+  .win,
+  .beacon,
+  .sky-moon {
+    animation: none !important;
   }
 }

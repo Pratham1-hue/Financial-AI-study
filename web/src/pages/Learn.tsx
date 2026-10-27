@@ -42,8 +42,10 @@ export function Learn() {
   }, [params])
 
   useEffect(() => {
-    if (!mid && modules && modules.length > 0) setMid(modules[0].id)
-  }, [mid, modules])
+    if (!mid && modules && modules.length > 0 && modules[0].track === track) {
+      setMid(modules[0].id)
+    }
+  }, [mid, modules, track])
 
   useEffect(() => {
     if (!mid) {

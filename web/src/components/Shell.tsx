@@ -6,6 +6,7 @@ import { fmtMoney, fmtSigned } from '../lib/format'
 import { useApp } from '../state/app'
 import { useTheme } from '../theme'
 import { Avatar, Badge, cx } from './ui'
+import { SpaceBackground } from './SpaceBackground'
 
 const NAV = [
   { to: '/', label: 'Dashboard', hotkey: 'H', icon: 'M3 11.5 12 4l9 7.5M5.5 10v9h13v-9' },
@@ -118,6 +119,7 @@ export function Shell() {
 
   return (
     <div className="relative min-h-screen">
+      <SpaceBackground />
       <div className="aurora" aria-hidden="true" />
 
       {/* mobile scrim */}

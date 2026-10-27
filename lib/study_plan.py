@@ -1,4 +1,15 @@
-"""Strict 16-week study plan: Finance + AI -> NYC job."""
+"""Strict 16-week study plan: Finance + AI -> NYC job.
+
+Paths:
+  * ai_researcher   - publishable ML/AI research (SOTA, papers, novel methods)
+  * ml_engineer     - production ML systems (serving, MLOps, feature stores)
+  * finance_ib      - investment banking NYC (modeling, valuation, deals)
+  * finance_quant   - hedge fund / prop trading (probability, microstructure)
+  * finance_corp    - corporate finance / FP&A (3-statement, DCF, budgeting)
+
+Weeks 1-4 are shared foundations. Weeks 5-8 begin branching by specialty.
+Weeks 9-12 deepen the chosen path. Weeks 13-16 are NYC job hunt.
+"""
 WEEKS = [
     {"w": 1, "phase": "Phase 1 - Foundations", "title": "Python + Financial Literacy",
      "focus": "Python basics, market mechanics, time value of money",
@@ -13,7 +24,7 @@ WEEKS = [
          "Day 7: Review + Week 1 quiz (20 Q) + rest",
      ],
      "milestone": "Can write Python to fetch and plot stock data; explain stock vs bond.",
-     "exam": "E1"},
+     "exam": None},
     {"w": 2, "phase": "Phase 1 - Foundations", "title": "Accounting + NumPy/pandas",
      "focus": "Financial statements, data manipulation",
      "hours": 42,
@@ -56,8 +67,9 @@ WEEKS = [
      ],
      "milestone": "Complete Phase 1 exam with >=70%.",
      "exam": "E1"},
-    {"w": 5, "phase": "Phase 2 - Core", "title": "Portfolio Theory + Random Forests/Boosting",
-     "focus": "MPT, efficient frontier, ensemble methods",
+    # ---------------- Branch point: choose your path ----------------
+    {"w": 5, "phase": "Phase 2 - Core", "title": "Portfolio Theory + Ensemble ML",
+     "focus": "MPT, efficient frontier, random forests / gradient boosting",
      "hours": 44,
      "days": [
          "Day 1: Mean-variance optimization; random forests",
@@ -112,6 +124,7 @@ WEEKS = [
      ],
      "milestone": "Complete Phase 2 exam with >=70%.",
      "exam": "E2"},
+    # ---------------- Specialization deepens ----------------
     {"w": 9, "phase": "Phase 3 - Advanced", "title": "Fintech/Microstructure + Data Engineering",
      "focus": "Order books, SQL, pipelines",
      "hours": 46,
@@ -225,6 +238,60 @@ WEEKS = [
      "milestone": "50+ applications; negotiation ready.",
      "exam": "E5"},
 ]
+
+# Per-specialty week focus notes (shown when learner picks a path)
+SPECIALTY_WEEK_FOCUS = {
+    "ai_researcher": {
+        5: "Focus: paper reading + reproducing a DL result.",
+        6: "Focus: derive backprop from scratch; reproduce a CNN paper.",
+        7: "Focus: build a transformer block from scratch; read Attention Is All You Need.",
+        8: "Focus: read a recent LLM paper; implement attention mechanism.",
+        9: "Focus: vector DB internals; reproduce a retrieval paper.",
+        10: "Focus: fine-tune a small LLM; write up results as a mini-paper.",
+        11: "Focus: implement a diffusion model or RL agent; compare to SOTA.",
+        12: "Focus: choose a recent paper (arXiv cs.LG/q-fin) and reproduce it.",
+    },
+    "ml_engineer": {
+        5: "Focus: production-quality feature engineering pipelines.",
+        6: "Focus: PyTorch training loops with checkpointing and logging.",
+        7: "Focus: serve a model locally; benchmark latency/throughput.",
+        8: "Focus: RAG pipeline with vector DB; evaluate retrieval quality.",
+        9: "Focus: Airflow DAGs; data quality tests; feature store basics.",
+        10: "Focus: Docker + FastAPI serving; MLflow experiment tracking.",
+        11: "Focus: model monitoring, drift detection, canary deployment.",
+        12: "Focus: production ML system with API, monitoring, and CI/CD.",
+    },
+    "finance_ib": {
+        5: "Focus: build comps and precedent transaction models.",
+        6: "Focus: LBO model basics; accretion/dilution.",
+        7: "Focus: M&A case walkthrough; synergy modeling.",
+        8: "Focus: how Fed policy moves deal markets; rate sensitivity.",
+        9: "Focus: alternative data for deal sourcing; market data APIs.",
+        10: "Focus: automate comps pulling via APIs; dashboard.",
+        11: "Focus: build a valuation model template for interviews.",
+        12: "Focus: LBO + DCF capstone; pitch-book style deck.",
+    },
+    "finance_quant": {
+        5: "Focus: Fama-French factor backtests in Python.",
+        6: "Focus: Monte Carlo option pricing; GBM simulation.",
+        7: "Focus: Greeks calculator; delta-hedging simulation.",
+        8: "Focus: macro data pipeline; yield curve trading signals.",
+        9: "Focus: order book data; market-making simulation.",
+        10: "Focus: backtesting engine with slippage and fees.",
+        11: "Focus: RL-based execution agent; PPO for trade scheduling.",
+        12: "Focus: quant backtester capstone with risk management.",
+    },
+    "finance_corp": {
+        5: "Focus: build a 3-statement model from scratch.",
+        6: "Focus: DCF with sensitivity tables; scenario analysis.",
+        7: "Focus: capital structure optimization; WACC build-up.",
+        8: "Focus: macro scenarios in corporate budgeting.",
+        9: "Focus: automate financial reporting with Python/SQL.",
+        10: "Focus: FP&A dashboard; variance analysis automation.",
+        11: "Focus: credit scoring model for corporate lending.",
+        12: "Focus: integrated FP&A model + credit risk capstone.",
+    },
+}
 
 PHASES = ["Phase 1 - Foundations", "Phase 2 - Core", "Phase 3 - Advanced", "Phase 4 - Job Hunt"]
 

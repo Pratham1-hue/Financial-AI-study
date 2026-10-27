@@ -39,6 +39,7 @@ def modules(track: str | None = None):
         {
             "id": m["id"], "title": m["title"], "track": m["track"], "level": m["level"],
             "weeks": m["weeks"], "summary": m["summary"],
+            "specialties": m.get("specialties", []),
             "status": gates.status(p, m["id"]),
             "lessons": len(m["lessons"]),
             "videos": len(yt_data.module_videos(m["id"])),
@@ -60,6 +61,7 @@ def module(mid: str):
     return {
         "id": m["id"], "title": m["title"], "track": m["track"], "level": m["level"],
         "weeks": m["weeks"], "summary": m["summary"], "lessons": m["lessons"],
+        "specialties": m.get("specialties", []),
         "outcomes": m["outcomes"],
         "status": gates.status(p, mid),
         "missing_prereqs": gates.missing_prereqs(p, mid),

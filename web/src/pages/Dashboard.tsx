@@ -163,62 +163,66 @@ export function Dashboard() {
     <div className="space-y-6 pb-24">
       <Confetti fire={streakFire} />
 
-      {/* Magazine cover hero */}
-      <ScrollReveal variant="fade-up" once delay={50}>
-        <MagazineCover className="w-full max-w-[1480px] mx-auto" />
-      </ScrollReveal>
+      {/* magazine cover + hero */}
+      <div className="grid gap-5 items-start lg:grid-cols-[minmax(0,400px)_minmax(0,1fr)]">
+        <ScrollReveal variant="fade-up" once delay={50}>
+          <MagazineCover className="w-full max-w-[400px] mx-auto lg:mx-0" />
+        </ScrollReveal>
 
-      {/* hero */}
-      <ScrollReveal variant="fade-up" delay={100} once>
-        <Card className="hero relative overflow-hidden p-0" padded={false}>
-          <div className="relative grid gap-8 p-7 md:grid-cols-[1fr_340px] md:items-start">
-            <div className="relative z-10 min-w-0 max-w-2xl">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-[0.68rem] font-semibold tracking-[0.26em] text-gold uppercase">
-                  Day {plan.day} of {plan.days_total} · {profile.target_role || 'the mission'}
-                </span>
-                {streak > 0 ? (
-                  <Chip tone="gold" className="animate-streak">🔥 {streak}-day streak</Chip>
+        <ScrollReveal variant="fade-up" delay={100} once>
+          <Card className="hero relative overflow-hidden p-0" padded={false}>
+            <div className="relative grid gap-8 p-7 xl:grid-cols-[1fr_300px] xl:items-start">
+              <div className="relative z-10 min-w-0 max-w-2xl">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-[0.68rem] font-semibold tracking-[0.26em] text-gold uppercase">
+                    Day {plan.day} of {plan.days_total} · {profile.target_role || 'the mission'}
+                  </span>
+                  {streak > 0 ? (
+                    <Chip tone="gold" className="animate-streak">🔥 {streak}-day streak</Chip>
+                  ) : null}
+                </div>
+                <h1 className="font-display text-[2.1rem] leading-[1.1] font-bold text-ink">
+                  {greeting}. {profile.name || 'Trader'} — today is a rep.
+                </h1>
+                <p className="mt-3 max-w-2xl text-[0.95rem] text-muted">{plan.assignment}</p>
+                {profile.why ? (
+                  <p className="mt-3 max-w-2xl border-l-2 border-gold pl-3 text-[0.88rem] italic text-ink-soft">
+                    {profile.why}
+                  </p>
                 ) : null}
+                <div className="mt-5 flex flex-wrap gap-2.5">
+                  <p className="w-full text-[0.68rem] font-semibold tracking-[0.2em] text-gold uppercase mb-2">
+                    Start your day →
+                  </p>
+                  <Link to="/focus?start=1">
+                    <Button variant="primary" size="lg">
+                      Start locked session
+                    </Button>
+                  </Link>
+                  <Link to="/learn">
+                    <Button size="lg">Open the curriculum</Button>
+                  </Link>
+                  <Link to="/desk">
+                    <Button size="lg">Trade a round</Button>
+                  </Link>
+                </div>
+                <div className="mt-5 max-w-xl">
+                  <QuoteLine text={quote.text} author={quote.author} />
+                </div>
               </div>
-              <h1 className="font-display text-[2.1rem] leading-[1.1] font-bold text-ink">
-                {greeting}. {profile.name || 'Trader'} — today is a rep.
-              </h1>
-              <p className="mt-3 max-w-2xl text-[0.95rem] text-muted">{plan.assignment}</p>
-              {profile.why ? (
-                <p className="mt-3 max-w-2xl border-l-2 border-gold pl-3 text-[0.88rem] italic text-ink-soft">
-                  {profile.why}
-                </p>
-              ) : null}
-              <div className="mt-5 flex flex-wrap gap-2.5">
-                <p className="w-full text-[0.68rem] font-semibold tracking-[0.2em] text-gold uppercase mb-2">
-                  Start your day →
-                </p>
-                <Link to="/focus?start=1">
-                  <Button variant="primary" size="lg">
-                    Start locked session
-                  </Button>
-                </Link>
-                <Link to="/learn">
-                  <Button size="lg">Open the curriculum</Button>
-                </Link>
-                <Link to="/desk">
-                  <Button size="lg">Trade a round</Button>
-                </Link>
-              </div>
-              <div className="mt-5 max-w-xl">
-                <QuoteLine text={quote.text} author={quote.author} />
-              </div>
-            </div>
 
-            <div className="flex flex-col items-center gap-6 min-w-0 max-w-[340px]">
-              <ProgressRing pct={goalPct * 100} size={124} stroke={11} label={fmtHM(metrics.focus_min_today).replace(' ', '')} sub="focus goal" />
-              <DayScoreRing pct={metrics.day_score} value={metrics.day_score} />
+              <div className="flex flex-col items-center gap-6 min-w-0 max-w-[300px]">
+                <ProgressRing pct={goalPct * 100} size={124} stroke={11} label={fmtHM(metrics.focus_min_today).replace(' ', '')} sub="focus goal" />
+                <DayScoreRing pct={metrics.day_score} value={metrics.day_score} />
+              </div>
             </div>
-          </div>
-          <Skyline height={64} className="opacity-60" />
-        </Card>
-      </ScrollReveal>
+            <Skyline height={64} className="opacity-60" />
+          </Card>
+        </ScrollReveal>
+      </div>
+
+      {/* daily challenge */}
+      <DailyChallenge />
 
       {/* metrics */}
       <ScrollReveal variant="fade-up" delay={150} once>

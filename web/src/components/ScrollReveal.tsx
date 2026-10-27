@@ -40,6 +40,12 @@ export function ScrollReveal({
     const el = ref.current
     if (!el) return
 
+    // Fallback: if IO is unavailable, never leave content hidden.
+    if (typeof IntersectionObserver === 'undefined') {
+      setVisible(true)
+      return
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {

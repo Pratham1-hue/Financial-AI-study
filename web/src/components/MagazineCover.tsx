@@ -1,47 +1,32 @@
-/** Motivational magazine cover using user's image.png.
- * Old School Money aesthetic: gold foil accents, masthead typography,
- * subtle vignette overlay. Acts as the hero visual on the dashboard.
+/** Motivational magazine cover using image.png.
+ * Old School Money aesthetic: gold foil border + motivational tagline.
+ * Sized as a proper magazine card (not a full-width banner) so it sits
+ * beside the hero without pushing dashboard content off-screen.
  */
-import { ScrollReveal } from './ScrollReveal'
-
 export function MagazineCover({ className }: { className?: string }) {
   return (
-    <ScrollReveal variant="fade-up" delay={100} once>
-      <div className={`magazine-cover relative overflow-hidden rounded-2xl border border-line bg-surface shadow-lg ${className ?? ''}`}>
-        <img
-          src="/image.png"
-          alt="Motivational magazine cover — Wall Street · AI"
-          loading="eager"
-          decoding="async"
-        />
-        <div className="absolute inset-0 flex flex-col justify-between p-6 pointer-events-none">
-          {/* Masthead */}
-          <div className="flex items-start justify-between mb-2">
-            <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-gold" />
-              <span className="font-display text-[0.7rem] font-bold tracking-wider text-gold uppercase">
-                L a k s h
-              </span>
-            </div>
-            <span className="text-[0.65rem] font-semibold tracking-wider text-gold/80 uppercase">
-              Wall Street · AI
-            </span>
-          </div>
-          {/* Motivational tagline */}
-          <div className="mt-auto mb-8">
-            <h2 className="font-display text-[1.5rem] md:text-[2rem] font-bold text-white leading-[1.05] mb-2 shadow-md">
-              The harder you work,
-            </h2>
-            <h2 className="font-display text-[1.5rem] md:text-[2rem] font-bold text-gold leading-[1.05] shadow-md">
-              the harder it is to surrender.
-            </h2>
-            <div className="mt-3 h-px w-24 bg-gold-2" />
-            <p className="mt-2 text-[0.72rem] font-semibold text-gold-soft tracking-[0.1em] uppercase">
-              Discipline · Mastery · New York
-            </p>
-          </div>
-        </div>
+    <div className={`magazine-cover relative overflow-hidden rounded-2xl border border-line bg-surface shadow-lg ${className ?? ''}`}>
+      <img
+        src="/image.png"
+        alt="Motivational magazine cover — the harder you work, the harder it is to surrender"
+        loading="eager"
+        decoding="async"
+      />
+      {/* Bottom scrim + tagline, kept clear of the cover's own printed masthead */}
+      <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5 pointer-events-none bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+        <h2 className="font-display text-[1.05rem] sm:text-[1.25rem] font-bold text-white leading-tight drop-shadow">
+          The harder you work,
+        </h2>
+        <h2 className="font-display text-[1.05rem] sm:text-[1.25rem] font-bold text-gold-2 leading-tight drop-shadow">
+          the harder it is to surrender.
+        </h2>
+        <div className="mt-2 h-px w-20 bg-gold-2/80" />
+        <p className="mt-1.5 text-[0.62rem] sm:text-[0.66rem] font-semibold text-white/85 tracking-[0.14em] uppercase">
+          Discipline · Mastery · New York
+        </p>
       </div>
-    </ScrollReveal>
+      {/* Gold foil corner accent */}
+      <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-[color-mix(in_srgb,var(--gold)_35%,transparent)] to-transparent pointer-events-none" aria-hidden="true" />
+    </div>
   )
 }

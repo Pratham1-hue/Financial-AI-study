@@ -460,6 +460,59 @@ RESOURCES = {
     "desc": "ML learning roadmap."},
 "r_roadmap_datascience": {"title": "Data Science Roadmap", "url": "https://roadmap.sh/ai-data-scientist", "type": "Reference", "track": "research", "cat": "Reference",
     "desc": "Data scientist roadmap."},
+# ============================================================
+# EXTRA FINANCE & MARKETS
+# ============================================================
+"r_yt_howmoneyworks": {"title": "How Money Works (YouTube)", "url": "https://www.youtube.com/@HowMoneyWorks", "type": "YouTube", "track": "finance", "cat": "Video",
+    "desc": "Economics and finance explained with strong visuals."},
+"r_yt_bloomberg": {"title": "Bloomberg Markets (YouTube)", "url": "https://www.youtube.com/@Bloomberg", "type": "YouTube", "track": "finance", "cat": "Video",
+    "desc": "Live markets, earnings, and global finance news."},
+"r_yt_realvision": {"title": "Real Vision (YouTube)", "url": "https://www.youtube.com/@RealVision", "type": "YouTube", "track": "finance", "cat": "Video",
+    "desc": "In-depth interviews with macro and investing legends."},
+"r_yt_tastylive": {"title": "tastylive (YouTube)", "url": "https://www.youtube.com/@tastylive", "type": "YouTube", "track": "quant", "cat": "Video",
+    "desc": "Options trading education and live market segments."},
+"r_yt_bloomberg_tv": {"title": "Bloomberg Television", "url": "https://www.bloomberg.com", "type": "Publication", "track": "finance", "cat": "Reference",
+    "desc": "Global business and financial news, data, and analysis."},
+"r_yahoo_finance": {"title": "Yahoo Finance", "url": "https://finance.yahoo.com", "type": "Tool", "track": "finance", "cat": "Data",
+    "desc": "Stock quotes, charts, and fundamental data."},
+"r_tradingview": {"title": "TradingView", "url": "https://www.tradingview.com", "type": "Tool", "track": "finance", "cat": "Tool",
+    "desc": "Charting and technical analysis platform."},
+"r_morningstar": {"title": "Morningstar", "url": "https://www.morningstar.com", "type": "Tool", "track": "finance", "cat": "Data",
+    "desc": "Fund and stock research, ratings, and portfolio tools."},
+"r_sec_company_filings": {"title": "SEC Company Search", "url": "https://www.sec.gov/cgi-bin/browse-edgar", "type": "Tool", "track": "finance", "cat": "Data",
+    "desc": "Look up any public company's EDGAR filing history."},
+"r_macrotrends": {"title": "Macrotrends", "url": "https://www.macrotrends.net", "type": "Tool", "track": "finance", "cat": "Data",
+    "desc": "Historical financial data and stock metrics."},
+"r_gurufocus": {"title": "GuruFocus", "url": "https://www.gurufocus.com", "type": "Tool", "track": "finance", "cat": "Data",
+    "desc": "Value investing screens and guru portfolio data."},
+"r_khan_macro": {"title": "Khan Academy - Macroeconomics", "url": "https://www.khanacademy.org/economics-finance-domain/macroeconomics", "type": "Course", "track": "finance", "cat": "Course",
+    "desc": "Free course on GDP, inflation, and monetary policy."},
+"r_coursera_financial_markets": {"title": "Yale - Financial Markets (Shiller, Coursera)", "url": "https://www.coursera.org/learn/financial-markets-global", "type": "Course", "track": "finance", "cat": "Course",
+    "desc": "Robert Shiller's classic course on markets, institutions, and behavioral finance."},
+# ============================================================
+# EXTRA QUANT / TRADING
+# ============================================================
+"r_yt_humbled_trader": {"title": "Humbled Trader (YouTube)", "url": "https://www.youtube.com/@HumbledTrader", "type": "YouTube", "track": "quant", "cat": "Video",
+    "desc": "Day trading education with risk-management focus."},
+"r_yt_quant_rules": {"title": "Quant Rules (YouTube)", "url": "https://www.youtube.com/@QuantRules", "type": "YouTube", "track": "quant", "cat": "Video",
+    "desc": "Quantitative trading strategies and Python for finance."},
+"r_kaggle_quant": {"title": "Kaggle - Quantitative Finance", "url": "https://www.kaggle.com/datasets?search=quantitative+finance", "type": "Dataset", "track": "quant", "cat": "Dataset",
+    "desc": "Quant finance datasets for strategy backtesting."},
+"r_wilmott": {"title": "Wilmott Magazine", "url": "https://wilmott.com", "type": "Publication", "track": "quant", "cat": "Reference",
+    "desc": "Quantitative finance magazine and forums."},
+"r_nuclear_phinance": {"title": "Nuclear Phinance Forum", "url": "https://www.nuclearphynance.com", "type": "Community", "track": "quant", "cat": "Community",
+    "desc": "Practitioner quant finance discussion."},
+# ============================================================
+# EXTRA CAREER / INTERVIEW
+# ============================================================
+"r_yt_tony": {"title": "Tony the Quant (YouTube)", "url": "https://www.youtube.com/@TonyTheQuant", "type": "YouTube", "track": "career", "cat": "Video",
+    "desc": "Quant trading career and interview prep."},
+"r_yt_helloworld": {"title": "Hello World (YouTube)", "url": "https://www.youtube.com/@HelloWorld", "type": "YouTube", "track": "career", "cat": "Video",
+    "desc": "Data science and ML career advice."},
+"r_book_case_interview": {"title": "Case Interview (Marc Cosentino)", "url": "https://www.caseinterview.com", "type": "Book", "track": "career", "cat": "Book",
+    "desc": "Consulting and finance case interview prep."},
+"r_yt_financial_education": {"title": "Financial Education (YouTube)", "url": "https://www.youtube.com/@FinancialEducation", "type": "YouTube", "track": "career", "cat": "Video",
+    "desc": "Stock market and personal finance for beginners."},
 }
 
 # ---------------------------------------------------------------------------

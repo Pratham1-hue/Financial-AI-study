@@ -1,6 +1,7 @@
 """Core endpoints: health, session, dashboard bootstrap, profile."""
 from __future__ import annotations
 
+import hashlib
 from datetime import date, datetime
 
 from fastapi import APIRouter, Cookie, HTTPException, Response
@@ -14,7 +15,8 @@ from lib import focus, gates
 from lib.content import MODULES
 from lib.nyc import NYC_COMP, rank_for
 from lib.quotes import quote_of_the_day
-from lib.storage import save_profile, streak_days
+from lib.quiz_bank import Q_BY_ID, QUESTIONS
+from lib.storage import log_activity, save_profile, streak_days
 from lib.study_plan import PHASES, WEEKS
 
 router = APIRouter()
@@ -158,6 +160,68 @@ def bootstrap():
             for b in acc.bootcamp_day(gm, int(prof.get("day_start", 9)))
         ],
     }
+
+
+class DailyChallengeComplete(BaseModel):
+    qid: str
+    answer: int
+
+
+DAILY_XP_BONUS = 50
+DAILY_PARTIAL_XP = 10
+
+
+def _pick_daily_qid(today: str) -> str:
+    """Deterministically pick a question for today so everyone sees the same one."""
+    digest = hashlib.sha256(f"laksh-daily-{today}".encode()).hexdigest()
+    return list(Q_BY_ID.keys())[int(digest[:8], 16) % len(Q_BY_ID)]
+
+
+@router.get("/daily-challenge")
+def daily_challenge():
+    """Today's challenge question (deterministic by date). Awards an XP bonus."""
+    p = deps.progress()
+    today = date.today().isoformat()
+    dc = p.get("daily_challenge", {})
+    if dc.get("date") == today and dc.get("completed"):
+        return {"completed": True, "date": today, "message": "Already done — come back tomorrow."}
+
+    qid = _pick_daily_qid(today)
+    q = Q_BY_ID[qid]
+    return {
+        "completed": False,
+        "date": today,
+        "question": {"id": q["id"], "track": q["track"], "module": q["module"],
+                     "diff": q["diff"], "q": q["q"], "opts": q["opts"]},
+        "xp_bonus": DAILY_XP_BONUS,
+    }
+
+
+@router.post("/daily-challenge/complete")
+def complete_daily_challenge(body: DailyChallengeComplete):
+    p = deps.progress()
+    today = date.today().isoformat()
+    dc = p.get("daily_challenge", {})
+    if dc.get("date") == today and dc.get("completed"):
+        return {"completed": True, "correct": dc.get("correct", False),
+                "xp_bonus": 0, "message": "Already completed today."}
+
+    q = Q_BY_ID.get(body.qid)
+    if not q:
+        raise HTTPException(status_code=404, detail="Unknown question.")
+
+    correct = body.answer == q["ans"]
+    p["daily_challenge"] = {"date": today, "completed": True, "correct": correct}
+
+    xp_bonus = DAILY_XP_BONUS if correct else DAILY_PARTIAL_XP
+    if correct:
+        p["xp"] = p.get("xp", 0) + xp_bonus
+    deps.commit(p)
+    log_activity(p, "daily_challenge")
+
+    return {"completed": True, "correct": correct,
+            "xp_bonus": xp_bonus, "xp": p.get("xp", 0),
+            "explanation": q["exp"], "correct_answer": q["opts"][q["ans"]]}
 
 
 @router.get("/profile")

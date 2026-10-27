@@ -98,15 +98,32 @@ QUESTIONS = [
 {"id":"c1_3","track":"career","module":"C1","diff":"medium","q":"Big-O of binary search is:","opts":["O(n)"," O(log n)"," O(n^2)"," O(1)"],"ans":1,"exp":"Binary search halves the search space each step."},
 {"id":"c1_4","track":"career","module":"C1","diff":"easy","q":"When negotiating salary, you should:","opts":["Accept first offer immediately"," Research market rates and counter"," Never negotiate"," Focus only on base salary"],"ans":1,"exp":"Always research and negotiate; consider total comp."},
 {"id":"c1_5","track":"career","module":"C1","diff":"medium","q":"A strong GitHub portfolio should include:","opts":["Only forked repos"," Original projects with READMEs and demos"," Private repos only"," Auto-generated code"],"ans":1,"exp":"Original, documented, deployed projects stand out."},
+# ---------- QUANT FINANCE & RISK (F5) ----------
+{"id":"f5_1","track":"quant","module":"F5","diff":"medium","q":"Value at Risk (VaR) at 99% confidence means:","opts":["The expected loss is 99% of the portfolio","Losses will exceed this level 1% of the time","The portfolio is 99% safe","Max drawdown is capped at 99%"],"ans":1,"exp":"99% VaR is the loss threshold exceeded only 1% of the time."},
+{"id":"f5_2","track":"quant","module":"F5","diff":"medium","q":"In Black-Scholes, higher volatility increases the value of:","opts":["Only calls","Only puts","Both calls and puts","Neither"],"ans":2,"exp":"Both calls and puts become more valuable as volatility rises (more upside/downside dispersion)."},
+{"id":"f5_3","track":"quant","module":"F5","diff":"hard","q":"Monte Carlo simulation in finance is used to:","opts":["Compute exact option prices in closed form","Model many possible price paths and average outcomes","Replace historical data","Guarantee profit"],"ans":1,"exp":"MC simulates thousands of price paths to estimate expected payoff and risk."},
+{"id":"f5_4","track":"quant","module":"F5","diff":"hard","q":"Expected Shortfall (CVaR) differs from VaR because it:","opts":["Is always smaller","Measures the average loss beyond the VaR threshold","Ignores tail risk","Uses normal distribution only"],"ans":1,"exp":"CVaR = expected loss conditional on exceeding VaR (tail expectation)."},
+# ---------- DERIVATIVES (F6) ----------
+{"id":"f6_1","track":"quant","module":"F6","diff":"easy","q":"A futures contract differs from a forward because:","opts":["Futures are custom, forwards are standardized","Futures trade on exchanges and are marked to market daily","Forwards have no counterparty risk","Futures cannot be closed early"],"ans":1,"exp":"Futures are standardized, exchange-traded, and daily-margined; forwards are private OTC contracts."},
+{"id":"f6_2","track":"quant","module":"F6","diff":"medium","q":"An interest rate swap exchanges:","opts":["Principal and interest","Fixed-rate payments for floating-rate payments","Only principal","Only equity returns"],"ans":1,"exp":"Parties swap fixed for floating interest payments on a notional principal."},
+# ---------- MACRO (F7) ----------
+{"id":"m1_4","track":"finance","module":"F7","diff":"easy","q":"Inflation is:","opts":["A rise in the general price level","A fall in the general price level","A rise in interest rates","A fall in unemployment"],"ans":0,"exp":"Inflation = sustained increase in the general price level."},
+{"id":"m1_5","track":"finance","module":"F7","diff":"medium","q":"Fiscal policy is set by:","opts":["The central bank","The government (treasury/parliament)","Commercial banks","Stock exchanges"],"ans":1,"exp":"Fiscal policy = government spending and taxation; monetary policy = central bank."},
+# ---------- MLOPS (A6) ----------
+{"id":"mlops1_4","track":"ai","module":"A6","diff":"medium","q":"CI/CD for ML differs from CI/CD for software because:","opts":["It only tests code","It also validates data and model quality","It does not deploy","It needs no testing"],"ans":1,"exp":"ML CI/CD must test data drift, model quality, and training pipelines—not just code."},
+{"id":"mlops1_5","track":"ai","module":"A6","diff":"medium","q":"Model monitoring in production primarily watches for:","opts":["Code syntax errors"," Data drift and prediction skew"," Server uptime only"," Developer logins"],"ans":1,"exp":"Monitoring detects when live data diverges from training data or model quality degrades."},
+# ---------- CAREER / CAPSTONE (C2) ----------
+{"id":"c2_4","track":"career","module":"C2","diff":"medium","q":"When choosing a capstone project, prioritize:","opts":["The trendiest tech stack"," A real problem with messy data and clear business value"," The shortest build time"," Copying a tutorial exactly"],"ans":1,"exp":"Employers want to see you solve messy, real problems—not follow tutorials."},
+{"id":"c2_5","track":"career","module":"C2","diff":"easy","q":"A project README should always include:","opts":["Only the code"," What it does, how to run it, and why it matters"," Marketing fluff"," Your salary history"],"ans":1,"exp":"A README tells reviewers what the project is, how to reproduce it, and why it matters."},
 ]
 
 # Exams group question ids
 EXAM_QUESTION_IDS = {
     "E1": ["f1_1","f1_2","f1_3","f1_4","f1_5","f2_1","f2_2","f2_3","f2_4","f2_5","p1_1","p1_2","p1_3","s1_1","s1_2","ml1_1","ml1_2","m1_1","m1_2"],
     "E2": ["f3_1","f3_2","f3_3","f3_4","f4_1","f4_2","f4_3","f4_4","q1_1","q1_2","q1_5","ml1_3","ml1_4","ml1_5","ml1_6","dl1_1","dl1_2","s1_3","s1_4"],
-    "E3": ["f5_1" if False else "q1_3","q1_4","q1_6","f6_1" if False else "f3_5","f8_1" if False else "m1_3","a_placeholder" if False else "ml1_7","ml1_8","dl1_3","dl1_4","dl1_5","dl1_6","nlp1_1","nlp1_2","nlp1_3","nlp1_4","nlp1_5","sql1_1","sql1_2"],
-    "E4": ["c1_1","c1_2","c1_3","c1_4","c1_5","p1_4","p1_5","sql1_3","sql1_4","mlops1_1","mlops1_2","mlops1_3"],
-    "E5": ["f1_1","f3_1","f4_1","q1_1","q1_4","ml1_1","ml1_6","dl1_5","nlp1_2","nlp1_4","sql1_2","mlops1_2","c1_2","c1_3","c1_5"],
+    "E3": ["f5_1","f5_2","q1_3","q1_4","q1_6","f6_1","f6_2","f3_5","m1_3","m1_4","ml1_7","ml1_8","dl1_3","dl1_4","dl1_5","dl1_6","nlp1_1","nlp1_2","nlp1_3","nlp1_4","nlp1_5","sql1_1","sql1_2"],
+    "E4": ["c1_1","c1_2","c1_3","c1_4","c1_5","p1_4","p1_5","sql1_3","sql1_4","mlops1_1","mlops1_2","mlops1_3","mlops1_4","mlops1_5"],
+    "E5": ["f1_1","f3_1","f4_1","q1_1","q1_4","ml1_1","ml1_6","dl1_5","nlp1_2","nlp1_4","sql1_2","mlops1_2","c1_2","c1_3","c1_5","c2_4","c2_5"],
 }
 
 # Normalize option whitespace

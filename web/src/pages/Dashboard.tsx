@@ -6,7 +6,9 @@ import { LineChart } from '../components/LineChart'
 import { QuoteLine } from '../components/Quote'
 import { Skyline } from '../components/Skyline'
 import { Badge, Bar, Button, Card, Chip, Empty, ProgressRing, SectionTitle, Spinner, cx } from '../components/ui'
+import { fireConfetti } from '../lib/confetti'
 import { fmtHM, fmtMoney, fmtSigned } from '../lib/format'
+import { api } from '../lib/api'
 import { useApp } from '../state/app'
 
 function DayScoreRing({ pct, value }: { pct: number; value: number }) {
@@ -18,6 +20,112 @@ function DayScoreRing({ pct, value }: { pct: number; value: number }) {
         <span className="w-2 h-2 rounded-full bg-gold animate-ok" />
         vs yesterday
       </div>
+    </Card>
+  )
+}
+
+/* ---------------------------------------------------------------- daily challenge */
+type DailyQ = { id: string; track: string; module: string; diff: string; q: string; opts: string[] }
+
+function DailyChallenge() {
+  const [challenge, setChallenge] = useState<{ completed: boolean; date: string; question?: DailyQ; xp_bonus: number; message?: string } | null>(null)
+  const [answer, setAnswer] = useState<number | null>(null)
+  const [result, setResult] = useState<{ correct: boolean; xp_bonus: number; xp: number; explanation: string; correct_answer: string } | null>(null)
+  const [busy, setBusy] = useState(false)
+
+  useEffect(() => {
+    api.get<{ completed: boolean; date: string; question?: DailyQ; xp_bonus: number; message?: string }>('/api/daily-challenge')
+      .then(setChallenge)
+      .catch(() => { /* silent — challenge is optional */ })
+  }, [])
+
+  if (!challenge) return null
+
+  if (challenge.completed) {
+    return (
+      <Card className="bg-surface-2 border border-line">
+        <div className="p-6">
+          <div className="flex items-center gap-2 mb-2">
+            <Badge tone="ok">✓ Daily challenge done</Badge>
+            <span className="ml-auto text-[0.72rem] font-semibold text-muted">{challenge.date}</span>
+          </div>
+          <p className="text-[0.85rem] text-muted">{challenge.message}</p>
+        </div>
+      </Card>
+    )
+  }
+
+  const q = challenge.question!
+  const disabled = !!result || busy
+
+  async function submit() {
+    if (answer === null) return
+    setBusy(true)
+    try {
+      const res = await api.post<{ completed: boolean; correct: boolean; xp_bonus: number; xp: number; explanation: string; correct_answer: string }>('/api/daily-challenge/complete', { qid: q.id, answer })
+      setResult(res)
+      if (res.correct) {
+        void fireConfetti(window.innerWidth / 2, window.innerHeight / 3, 120)
+      }
+    } catch {
+      /* silent */
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <Card className="hero fade-up relative overflow-hidden p-0" padded={false}>
+      <div className="relative z-10 p-7">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Badge tone="gold">Daily challenge</Badge>
+            <span className="ml-auto text-[0.72rem] font-semibold text-gold">+{challenge.xp_bonus} XP</span>
+          </div>
+          <span className="text-[0.68rem] font-semibold tracking-[0.16em] text-muted uppercase">{q.module} · {q.diff}</span>
+        </div>
+        <h3 className="font-display text-[1.25rem] font-bold text-ink mb-3">{q.q}</h3>
+        <div className="space-y-2">
+          {q.opts.map((opt, oi) => (
+            <button
+              key={oi}
+              disabled={disabled}
+              onClick={() => setAnswer(oi)}
+              className={cx(
+                'flex w-full items-start gap-3 rounded-xl border px-3.5 py-2.5 text-left text-[0.88rem] transition disabled:cursor-default',
+                disabled && result && result.correct && answer === oi
+                  ? 'border-[color-mix(in_srgb,var(--ok)_45%,transparent)] bg-ok-soft text-ok'
+                  : disabled && result && answer === oi && !result.correct
+                    ? 'border-[color-mix(in_srgb,var(--bad)_45%,transparent)] bg-bad-soft text-bad'
+                    : answer === oi
+                      ? 'border-gold bg-gold-soft text-ink'
+                      : 'border-line bg-surface-2 text-ink-soft hover:border-line-strong',
+              )}
+            >
+              <span className="mono mt-0.5 text-[0.72rem] font-bold opacity-70">{['A', 'B', 'C', 'D'][oi]}</span>
+              <span>{opt}</span>
+            </button>
+          ))}
+        </div>
+        {!result && !disabled ? (
+          <div className="mt-5 flex gap-2">
+            <Button variant="primary" onClick={submit} className="flex-1">
+              Submit answer
+            </Button>
+          </div>
+        ) : null}
+        {result ? (
+          <div className="mt-5 rounded-xl p-4 bg-surface-2 border border-line">
+            <div className="flex items-center gap-2 mb-2">
+              {result.correct ? <span className="text-ok font-bold">✓ Correct!</span> : <span className="text-bad font-bold">Not quite.</span>}
+              <span className="ml-auto text-[0.72rem] font-semibold text-gold">+{result.xp_bonus} XP</span>
+            </div>
+            <p className="text-[0.85rem] text-muted">{result.explanation}</p>
+            <p className="mt-2 text-[0.75rem] text-muted">Correct answer: {result.correct_answer}</p>
+          </div>
+        ) : null}
+      </div>
+      <Skyline height={48} className="opacity-60" />
     </Card>
   )
 }
@@ -98,6 +206,9 @@ export function Dashboard() {
         </div>
         <Skyline height={64} className="opacity-60" />
       </Card>
+
+      {/* daily challenge */}
+      <DailyChallenge />
 
       {/* metrics */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

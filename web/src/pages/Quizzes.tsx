@@ -71,6 +71,9 @@ function Practice({ initialModule }: { initialModule: string | null }) {
         answers,
       })
       setResult(res)
+      if (res && res.pct >= 80) {
+        void fireConfetti(window.innerWidth / 2, window.innerHeight / 3, 140)
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (e) {
       setError((e as Error).message)

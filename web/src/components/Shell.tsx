@@ -7,6 +7,7 @@ import { useApp } from '../state/app'
 import { useTheme } from '../theme'
 import { Avatar, Badge, cx } from './ui'
 import { NYCClock, ScrollProgress } from './motion'
+import { FocusEngine } from './FocusTimer'
 import { ParallaxSkyline } from './ParallaxSkyline'
 import { SpaceBackground } from './SpaceBackground'
 
@@ -307,9 +308,13 @@ export function Shell() {
         <Ticker />
       </div>
 
-      <main key={location.pathname} className="page-enter mx-auto w-full max-w-[1480px] flex-1 px-3 py-6 sm:px-5 md:px-7 md:py-8">
-        <Outlet />
-      </main>
+      {/* global focus clock: floating mini-timer + phase-completion modal.
+          Wraps the routed page so useFocusEngine() reaches every route. */}
+      <FocusEngine>
+        <main key={location.pathname} className="page-enter mx-auto w-full max-w-[1480px] flex-1 px-3 py-6 sm:px-5 md:px-7 md:py-8">
+          <Outlet />
+        </main>
+      </FocusEngine>
 
       {/* immersive NYC skyline footer */}
       <footer className="w-full">

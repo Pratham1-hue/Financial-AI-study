@@ -1,43 +1,24 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { TimerRing } from '../components/TimerRing'
 import { QuoteLine } from '../components/Quote'
 import { StaggerGroup } from '../components/motion'
+import { useFocusEngine } from '../components/FocusTimer'
 import { Badge, Bar, Button, Card, Empty, Field, PageHeader, SectionTitle, Spinner, cx, inputCls } from '../components/ui'
 import { api, type FocusPayload } from '../lib/api'
 import { fmtClock, fmtHM } from '../lib/format'
 import { usePoll } from '../lib/hooks'
-
-function beep() {
-  try {
-    const Ctx = window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
-    const ctx = new Ctx()
-    const osc = ctx.createOscillator()
-    const gain = ctx.createGain()
-    osc.type = 'sine'
-    osc.frequency.value = 880
-    gain.gain.setValueAtTime(0.14, ctx.currentTime)
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.9)
-    osc.connect(gain).connect(ctx.destination)
-    osc.start()
-    osc.stop(ctx.currentTime + 0.9)
-    window.setTimeout(() => void ctx.close(), 1200)
-  } catch {
-    /* audio is a nicety */
-  }
-}
 
 export function Focus() {
   const [params] = useSearchParams()
   const [data, setData] = useState<FocusPayload | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [now, setNow] = useState(() => Date.now())
-  const [busy, setBusy] = useState(false)
-  const [banner, setBanner] = useState<string | null>(null)
   const autoStarted = useRef(false)
-  const ticking = useRef(false)
+
+  // the engine owns the clock and is the only caller of /api/focus/tick
+  const { state, remaining: displayRemaining, busy, act: engineAct } = useFocusEngine()
 
   const load = useCallback(async (quiet = false) => {
     if (!quiet) setLoading(true)
@@ -55,55 +36,21 @@ export function Focus() {
     void load()
   }, [load])
 
-  // smooth client clock
-  useEffect(() => {
-    const id = window.setInterval(() => setNow(Date.now()), 250)
-    return () => window.clearInterval(id)
-  }, [])
-
-  // resync with the server every 10s (it owns the clock)
+  // resync this page's stats/log with the server
   usePoll(() => load(true), 10_000, !!data)
 
-  const state = data?.state
   const running = state?.status === 'running'
-  const displayRemaining = useMemo(() => {
-    if (!state) return 0
-    if (running && state.ends_at) return Math.max(0, state.ends_at - now / 1000)
-    return state.remaining
-  }, [state, running, now])
 
+  // wrap the engine's act so this page surfaces errors in its own banner
   const act = useCallback(
     async (path: string, body?: unknown) => {
-      setBusy(true)
-      try {
-        const res = (await api.post(path, body)) as { state?: FocusPayload['state']; minutes?: number; event?: string | null }
-        await load(true)
-        return res
-      } catch (e) {
-        setError((e as Error).message)
-        return null
-      } finally {
-        setBusy(false)
-      }
+      const res = await engineAct(path, body)
+      if (!res) setError('That action did not go through. Try again.')
+      await load(true)
+      return res
     },
-    [load],
+    [engineAct, load],
   )
-
-  // phase over -> advance the state machine
-  useEffect(() => {
-    if (!running || displayRemaining > 0 || ticking.current) return
-    ticking.current = true
-    void (async () => {
-      const res = await act('/api/focus/tick')
-      ticking.current = false
-      if (res?.event) {
-        if (res.event === 'focus_done') setBanner('Block banked. Take the break — you earned it.')
-        else if (res.event === 'break_done') setBanner('Break over. Back in.')
-        else setBanner(res.event.replace(/_/g, ' '))
-        if (state?.sound) beep()
-      }
-    })()
-  }, [running, displayRemaining, act, state?.sound])
 
   // deep link: /focus?start=1
   useEffect(() => {
@@ -116,7 +63,7 @@ export function Focus() {
 
   if (loading && !data) return <Spinner label="Loading the clock" />
   if (error && !data) return <Empty>{error}</Empty>
-  if (!data || !state) return <Empty>No focus state.</Empty>
+  if (!state || !data) return <Empty>Waiting for the clock…</Empty>
 
   const { stats, goal_min, rank, log } = data
   const phaseColor = state.phase_color
@@ -144,15 +91,6 @@ export function Focus() {
         <div className="rounded-xl border border-[color-mix(in_srgb,var(--bad)_35%,transparent)] bg-bad-soft px-4 py-3 text-[0.88rem] font-medium text-bad">
           {error}
           <button onClick={() => setError(null)} className="ml-3 text-[0.75rem] underline opacity-70">
-            dismiss
-          </button>
-        </div>
-      ) : null}
-
-      {banner ? (
-        <div key={banner} className="slide-up rounded-xl border border-[color-mix(in_srgb,var(--gold)_35%,transparent)] bg-gold-soft px-4 py-3 text-[0.88rem] font-medium text-gold">
-          {banner}
-          <button onClick={() => setBanner(null)} className="ml-3 text-[0.75rem] underline opacity-70">
             dismiss
           </button>
         </div>
